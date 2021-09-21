@@ -18,7 +18,7 @@ I've placed spaces, but they're not required
 | `_ ( _ )` | Call function (first \_) with parameter (second \_) |
 | `[ _ :> _ , _ , _ , ... ]` | Expression denoting a list with type first \_ of comma separated sub expressions |
 | `'_'` | Expression denoting a string, just like in other programming languages |
-| `0d_#` | Expression denoting a decimal number. Just put it into the parenthesis |
+| `0d_#` | Expression denoting a decimal number. |
 | `0x_#` | Enter a number as hex |
 | `{ _ :> _ , _ :> _ }` | Expression denoting a tuple |
 | `_ ? _ : _` | If an expression converted to a number is > 0, then expression is first, otherwise second
