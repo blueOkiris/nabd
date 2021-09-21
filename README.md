@@ -1,4 +1,4 @@
-# nabd
+# Nabd ("Nabbed")
 
 ## Description
 
@@ -6,7 +6,13 @@ A simple, functional, esoteric programming language.
 
 The name is an acronym standing for "Not A Brainf\*\*k Derivative"
 
+## Modules
+
 Code is organized into modules and the module file directories can be passed into the compiler with `-I<folder name>` like headers in gcc.
+
+Modules can either be nabd code *or* C++ headers with a corresponding object file (determined by file extension).
+
+For reference, look at the standard library implementation as that is a C++ library.
 
 ## Instructions
 
