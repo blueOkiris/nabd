@@ -3,6 +3,7 @@
 ## Description
 
 A simple, functional, esoteric programming language.
+
 The name is an acronym standing for "Not A Brainf\*\*k Derivative"
 
 Code is organized into modules and the module file directories can be passed into the compiler with `-I<folder name>` like headers in gcc.
@@ -14,7 +15,7 @@ I've placed spaces, but they're not required
 | Instruction | Description |
 |:-:|:-:|
 | `$ # $` | Reads code from the module within dollar signs. If a module contains quotes, an escape sequence (`\'`) can be used |
-| `_ : _ :: _ > _ .` | Define a function with name (first \_) and parameter (second \_) of some type (third \_) returning an expression (last \_). Polymorphism is allowed. |
+| `_ = _ :: _ > _ .` | Define a function with name (first \_) and parameter (second \_) of some type (third \_) returning an expression (last \_). Polymorphism is allowed. |
 | `_ ( _ )` | Call function (first \_) with parameter (second \_) |
 | `[ _ :> _ , _ , _ , ... ]` | Expression denoting a list with type first \_ of comma separated sub expressions |
 | `'_'` | Expression denoting a string, just like in other programming languages |
@@ -36,10 +37,22 @@ Code is organized into functions, and the first function called is `main`, which
 ## Examples
 
 __Hello World:__
-`$std$main:args::[Str]>print('Hello, world!\n').`
+
+`$std$main=args::[Str]>print('Hello, world!\n').`
 
 __Truth Machine:__
-`$std$i1InfI0Stop:loop::Num>loop?i1InfI0Stop(print(1)):print(0).main:args::[Str]>i1InfI0Stop(input(0)).`
+
+`$std$i1InfI0Stop=loop::Num>loop?i1InfI0Stop(print(1)):print(0).main=args::[Str]>i1InfI0Stop(input(0)).`
+
+or
+
+```
+$std$
+i1InfI0Stop = loop :: Num >
+    loop ? i1Inf0Stop(print(1)) : print(0).
+main = args :: [Str] >
+    i1InfI0Stop(input(0)).
+```
 
 ## Standard Library Functions
 
