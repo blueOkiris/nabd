@@ -2,7 +2,8 @@
 
 ## Description
 
-A simple esoteric programming language.
+A simple, functional, esoteric programming language.
+The name is an acronym standing for "Not A Brainf\*\*k Derivative"
 
 Code is organized into modules and the module file directories can be passed into the compiler with `-I<folder name>` like headers in gcc.
 
