@@ -2,7 +2,7 @@
 
 ## Description
 
-A simple, functional, esoteric programming language.
+A simple, functional esoteric programming language.
 
 The name is an acronym standing for "Not A Brainf\*\*k Derivative"
 
