@@ -20,7 +20,7 @@ I've placed spaces, but they're not required
 
 | Instruction | Description |
 |:-:|:-:|
-| `$ # $` | Reads code from the module within dollar signs. If a module contains quotes, an escape sequence (`\'`) can be used |
+| `$ # $` | Reads code from the module within dollar signs. If a module contains `$`, an escape sequence (`\$`) can be used |
 | `_ = _ :: _ > _ .` | Define a function with name (first \_) and parameter (second \_) of some type (third \_) returning an expression (last \_). Polymorphism is allowed. |
 | `_ ( _ )` | Call function (first \_) with parameter (second \_) |
 | `[ _ :> _ , _ , _ , ... ]` | Expression denoting a list with type first \_ of comma separated sub expressions |
