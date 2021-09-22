@@ -11,7 +11,8 @@
 namespace nabd {
     // String -> String
     inline VariablePointer print(VariablePointer rawInput) {
-        const auto input = input->toString();
+        const auto input = rawInput->toString();
         std::cout << input->value;
+        return input;
     }
 }
