@@ -30,6 +30,7 @@ enum class VariableType {
 template<class T1, class T2>
 struct Variable {
     Variable(
+        const VariableType varType,
         const std::vector<T1> &first,
         const T2 &second // only for tuple
     );
