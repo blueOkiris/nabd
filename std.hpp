@@ -15,4 +15,12 @@ namespace nabd {
         std::cout << input->value;
         return input;
     }
+    
+    // Number -> String
+    inline VariablePointer input(VariablePointer rawInput) {
+        //const auto input = rawInput->toNumber();
+        std::string str;
+        std::cin >> str;
+        return std::make_shared<StringVariable>(str);
+    }
 }
