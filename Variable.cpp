@@ -15,8 +15,9 @@ using namespace nabd;
 
 template<class T1, class T2>
 Variable::Variable(
+        const VariableType varType,
         const std::vector<Variable<T1>> &first, const Variable<T2> &second) :
-        value(first), value2(second) {
+        type(varType), value(first), value2(second) {
 }
 
 std::string Variable::toStr(void) const {
@@ -51,5 +52,21 @@ double Variable::toNum(void) const {
         case Variable.Tuple:
         case Variable.List:
             return first[0].toNum();
+    }
+}
+
+template<class T1, class T2>
+std::string Variable::toList(void) const {
+    switch(type) {
+        case VariableType.String:
+        case VariableType.Number:
+        case VariableType.Tuple:
+            return Variable(
+                VariableType.List,
+                std::vector<Variable<T1, T2>>({ *this }),
+                std::vector<int>({ 0 })
+            );
+        case VariableType.List:
+            return *this;
     }
 }
