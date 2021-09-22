@@ -37,7 +37,9 @@ struct Variable {
     
     std::string toStr(void) const;
     double toNum(void) const;
-    std::vector<T1> toLs(void) const;
+    template<class OtherT>
+    std::vector<OtherT> toLs(void) const;
+    template<class OtherT1, class OtherT2>
     std::pair<T1, T2> toTup(void) const;
     
     const VariableType type;
