@@ -31,6 +31,7 @@ template<class T1, class T2>
 struct Variable {
     Variable(
         const VariableType varType,
+        const VariableType subVarType, // only for list of lists
         const std::vector<T1> &first,
         const T2 &second // only for tuple
     );
@@ -43,6 +44,7 @@ struct Variable {
     Variable<OtherT1, OtherT2> toTup(void) const;
     
     const VariableType type;
+    const VariableType subType;
     const std::vector<T1> value;
     const T2 value2; // Only used for tuple
 };
