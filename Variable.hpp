@@ -30,16 +30,16 @@ enum class VariableType {
 template<class T1, class T2>
 struct Variable {
     Variable(
-        const std::vector<T1> &first,
-        const T2 &second // only for tuple
+        const std::vector<Variable<T1>> &first,
+        const Variable<T2> &second // only for tuple
     );
     
     std::string toStr(void) const;
     double toNum(void) const;
-    std::vector<T1> toLs(void) const;
-    std::pair<T1, T2> toTup(void) const;
+    std::vector<Variable<T1>> toLs(void) const;
+    std::pair<Variable<T1>, Variable<T2>> toTup(void) const;
     
     const VariableType type;
-    const std::vector<T1> value;
-    const T2 value2; // Only used for tuple
+    const std::vector<Varaible<T1>> value;
+    const Variable<T2> value2; // Only used for tuple
 };
