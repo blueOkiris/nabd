@@ -24,7 +24,7 @@
 enum class VariableType {
     String, Number,
     List, Tuple
-}
+};
 
 // Generic variable struct that can be any of the four
 template<class T1, class T2>
@@ -34,10 +34,10 @@ struct Variable {
         const T2 &second // only for tuple
     );
     
-    std::string toStr(void);
-    double toNum(void);
-    std::vector<T1> toLs(void);
-    std::pair<T1, T2> toTup(void);
+    std::string toStr(void) const;
+    double toNum(void) const;
+    std::vector<T1> toLs(void) const;
+    std::pair<T1, T2> toTup(void) const;
     
     const VariableType type;
     const std::vector<T1> value;
