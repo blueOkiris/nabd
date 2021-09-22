@@ -4,9 +4,9 @@
  *  - A program that should mimic the desired output for the truth machine
  *  - $std$
  *    i1InfI0Stop = loop :: Num >
- *        loop ? i1InfI0Stop(print(1)) : print(0).
+ *        loop ? i1InfI0Stop(print(0d1#)) : print(0x0#).
  *    main = args :: [Str] >
- *        i1InfI0Stop(input(0)).
+ *        i1InfI0Stop(input(0d0#)).
  */
 
 #include <vector>
@@ -18,7 +18,8 @@ using namespace nabd;
 
 #include <std.hpp> // $std$
 
-VariablePointer main(const VariablePointer &rawInput); // main =
+VariablePointer i1InfI0Stop(const VariablePointer &loop); // i1InfI0Stop = loop...
+VariablePointer main(const VariablePointer &rawInput); // main = args...
 
 int main(int argc, char **args) {
     std::vector<VariablePointer> argVars;
@@ -31,8 +32,16 @@ int main(int argc, char **args) {
     return static_cast<int>(retVal->toNumber()->value);
 }
 
-// main = args :: [Str] > print('Hello, world!\n').
+// i1InfI0Stop = loop :: Num > loop ? i1InfI0Stop(print(0d1#)) : print(0x0#).
+VariablePointer i1InfI0Stop(const VariablePointer &loop) {
+    const auto loop = loop->toNumber();
+    return loop->toNumber()->value > 0 ?
+        i1InfI0Stop(print(std::make_shared<NumberVariable>(1))) :
+        print(std::make_shared<NumberVariable>(0));
+}
+
+// main = args :: [Str] > i1InfI0Stop(input(0d0#)).
 VariablePointer main(const VariablePointer &rawInput) {
     const auto args = rawInput->toList(std::vector({ VariableType.String }));
-    return 
+    return i1InfI0Stop(input(std::make_shared<NumberVariable>(0)));
 }
