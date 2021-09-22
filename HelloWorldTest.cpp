@@ -1,6 +1,8 @@
 /*
  * Author: Dylan Turner
- * Description: A program that should mimic the desired output for hello world
+ * Description:
+ *  - A program that should mimic the desired output for hello world
+ *  - $std$main=args::[Str]>print('Hello, world!\n').
  */
 
 #include <vector>
