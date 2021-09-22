@@ -39,7 +39,17 @@ std::string Variable::toStr(void) const {
             listRep << "}";
             return listRep.str();
         }
-    }   
+    }
 }
 
-
+double Variable::toNum(void) const {
+    switch(type) {
+        case Variable.String:
+            return first[0].length() > 0 ? static_cast<double>(first[0][0]) : 0;
+        case Variable.Number:
+            return first[0];
+        case Variable.Tuple:
+        case Variable.List:
+            return first[0].toNum();
+    }
+}
