@@ -18,7 +18,7 @@ using namespace nabd;
 
 #include <std.hpp> // $std$
 
-VariablePointer i1InfI0Stop(const VariablePointer &loop); // i1InfI0Stop = loop...
+VariablePointer i1InfI0Stop(const VariablePointer &rawInput); // i1InfI0Stop = loop...
 VariablePointer main(const VariablePointer &rawInput); // main = args...
 
 int main(int argc, char **args) {
@@ -33,8 +33,8 @@ int main(int argc, char **args) {
 }
 
 // i1InfI0Stop = loop :: Num > loop ? i1InfI0Stop(print(0d1#)) : print(0x0#).
-VariablePointer i1InfI0Stop(const VariablePointer &loop) {
-    const auto loop = loop->toNumber();
+VariablePointer i1InfI0Stop(const VariablePointer &rawInput) {
+    const auto loop = rawInput->toNumber();
     return loop->toNumber()->value > 0 ?
         i1InfI0Stop(print(std::make_shared<NumberVariable>(1))) :
         print(std::make_shared<NumberVariable>(0));
