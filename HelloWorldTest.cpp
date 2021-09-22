@@ -8,13 +8,11 @@
 #include <memory>
 #include <Variable.hpp>
 
-#include <std.hpp>
-
 using namespace nabd;
 
-VariablePointer main(const VariablePointer &rawInput) {
-    rawInput->toList(std::vector({ VariableType.String }));
-}
+#include <std.hpp> // $std$
+
+VariablePointer main(const VariablePointer &rawInput); // main =
 
 int main(int argc, char **args) {
     std::vector<VariablePointer> argVars;
@@ -25,4 +23,10 @@ int main(int argc, char **args) {
     }
     const auto retVal = main(std::make_shared<ListVariable>(argVars));
     return static_cast<int>(retVal->toNumber()->value);
+}
+
+// main = args :: [Str] > print('Hello, world!\n').
+VariablePointer main(const VariablePointer &rawInput) {
+    const auto args = rawInput->toList(std::vector({ VariableType.String }));
+    return print(std::make_shared<StringVariable>("Hello, world!\n"));
 }
