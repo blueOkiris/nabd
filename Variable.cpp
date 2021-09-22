@@ -94,5 +94,8 @@ Variable<T, int> Variable::toLs(const VariableType subType) {
 
 template<class T1, class T2>
 Variable<T1, T2> Variable::_makeLs(void) const {
-    
+    return Variable<T1, T2>(
+        VariableType.List, VariableType.String,
+        std::vector<Variable<T1, T2>>({ *this }), 0
+    );
 }
