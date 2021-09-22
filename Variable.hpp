@@ -15,6 +15,10 @@
  * when we call toInt or something
  */
 
+#pragma once
+
+#include <string>
+#include <utility>
 #include <vector>
 
 enum class VariableType {
