@@ -46,7 +46,6 @@ VariablePointer listHelper(
     }
 }
 
-
 StringVariable::StringVariable(const std::string &data) : value(data) {
 }
 
@@ -71,40 +70,81 @@ VariablePointer StringVariable::toTuple(void) const {
     ));
 }
 
-/*struct NumberVariable : public Variable {
-    public:
-        NumberVariable(const double data);
-        
-        VariablePointer toString(void) const override;
-        VariablePointer toNumber(void) const override;
-        VariablePointer toList(void) const override;
-        VariablePointer toTuple(void) const override;
-        
-        const double value;
-};
+NumberVariable::NumberVariable(const double data) : value(data) {
+}
 
-struct ListVariable : public Variable {
-    public:
-        ListVariable(const std::vector<VariablePointer> &data);
-        
-        VariablePointer toString(void) const override;
-        VariablePointer toNumber(void) const override;
-        VariablePointer toList(void) const override;
-        VariablePointer toTuple(void) const override;
-        
-        const std::vector<VariablePointer> values;
-};
+VariablePointer NumberVariable::toString(void) const {
+    return std::make_shared<StringVariable>(std::to_string(value));
+}
 
-struct TupleVariable : public Variable {
-    public:
-        TupleVariable(
-            const std::pair<VariablePointer, VariablePointer> &data
-        );
-        
-        VariablePointer toString(void) const override;
-        VariablePointer toNumber(void) const override;
-        VariablePointer toList(void) const override;
-        VariablePointer toTuple(void) const override;
-        
-        const std::pair<VariablePointer, VariablePointer> values;
-};*/
+VariablePointer NumberVariable::toNumber(void) const {
+    return std::make_shared<NumberVariable>(value);
+}
+
+VariablePointer NumberVariable::toList(
+        const std::vector<VariableType> &subTypes) const {
+    return listHelper(std::shared_ptr(this), subTypes);
+}
+
+VariablePointer NumberVariable::toTuple(void) const {
+    return std::make_shared<TupleVariable>(std::make_pair(
+        std::shared_ptr(this), std::shared_ptr(this)
+    ));
+}
+
+TupleVariable::TupleVariable(
+        const std::pair<VariablePointer, VariablePointer> &data) :
+        values(data) {
+}
+
+VariablePointer TupleVariable::toString(void) const {
+    return std::make_shared<StringVariable>(
+        "(" + values[0]->toString()->value + ", "
+            + values[1]->toString()->value + ")"
+    );
+}
+
+VariablePointer TupleVariable::toNumber(void) const {
+    return std::make_shared<NumberVariable>(values[0]->toNumber()->value);
+}
+
+VariablePointer TupleVariable::toList(
+        const std::vector<VariableType> &subTypes) const {
+    return listHelper(std::shared_ptr(this), subTypes);
+}
+
+VariablePointer TupleVariable::toTuple(void) const {
+    return std::make_shared<TupleVariable>(TupleVariable(values));
+}
+
+ListVariable::ListVariable(
+        const std::vector<VariablePointer> &data) :
+        values(data) {
+}
+
+VariablePointer ListVariable::toString(void) const {
+    std::stringstream listStr;
+    listStr << "{";
+    for(const auto value : values) {
+        listStr << value->toString()->value;
+        if(listStr != *(values.begin()) {
+            listStr << ", ";
+        }
+    }
+    return std::make_shared<StringVariable>(listStr.str());
+}
+
+VariablePointer ListVariable::toNumber(void) const {
+    return std::make_shared<NumberVariable>(values[0]->toNumber()->value);
+}
+
+VariablePointer ListVariable::toList(
+        const std::vector<VariableType> &subTypes) const {
+    return std::make_shared<ListVariable>(values);
+}
+
+VariablePointer ListVariable::toTuple(void) const {
+    return std::make_shared<TupleVariable>(std::make_pair(
+        std::shared_ptr(this), std::shared_ptr(this)
+    ));
+}
