@@ -1,6 +1,6 @@
 /*
  * Author: Dylan Turner
- * Description: A program that should mimic the desired output of the compiler
+ * Description: A program that should mimic the desired output for hello world
  */
 
 #include <vector>
