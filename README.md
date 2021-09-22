@@ -48,16 +48,16 @@ __Hello World:__
 
 __Truth Machine:__
 
-`$std$i1InfI0Stop=loop::Num>loop?i1InfI0Stop(print(1)):print(0).main=args::[Str]>i1InfI0Stop(input(0)).`
+`$std$i1InfI0Stop=loop::Num>loop?i1InfI0Stop(print(0d1#)):print(0d0#).main=args::[Str]>i1InfI0Stop(input(0d0#)).`
 
 or
 
 ```
 $std$
 i1InfI0Stop = loop :: Num >
-    loop ? i1Inf0Stop(print(1)) : print(0).
+    loop ? i1Inf0Stop(print(0d1#)) : print(0d0#).
 main = args :: [Str] >
-    i1InfI0Stop(input(0)).
+    i1InfI0Stop(input(0d0#)).
 ```
 
 ## Standard Library Functions
