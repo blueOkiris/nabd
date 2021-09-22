@@ -35,12 +35,12 @@ struct Variable {
         const T2 &second // only for tuple
     );
     
-    std::string toStr(void) const;
-    double toNum(void) const;
+    Variable<std::string, int> toStr(void) const;
+    Variable<double, int> toNum(void) const;
     template<class OtherT>
-    std::vector<OtherT> toLs(void) const;
+    Variable<OtherT, int> toLs(void) const;
     template<class OtherT1, class OtherT2>
-    std::pair<T1, T2> toTup(void) const;
+    Variable<OtherT1, OtherT2> toTup(void) const;
     
     const VariableType type;
     const std::vector<T1> value;
