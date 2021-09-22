@@ -106,7 +106,7 @@ std::string Variable::toLs(const VariableType subType) const {
                         newData.push_back(datum.toTup());
                         break;
                     case Variable.List:
-                        newData.push_back(datum.toLs());
+                        newData.push_back(datum.toLs(datum.type));
                         break;
                 }
             }
