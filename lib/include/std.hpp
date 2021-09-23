@@ -9,16 +9,12 @@
 #include <Variable.hpp>
 
 namespace nabd {
-    // String -> String
-    inline VariablePointer print(VariablePointer rawInput) {
-        const auto input = rawInput->toString();
-        std::cout << input->value;
-        return input;
+    inline VariablePointer print(const VariablePointer &msg) {
+        std::cout << msg->toString()->value;
+        return msg->toString();
     }
     
-    // Number -> String
-    inline VariablePointer input(VariablePointer rawInput) {
-        //const auto input = rawInput->toNumber();
+    inline VariablePointer input(const VariablePointer &dummy) {
         std::string str;
         std::cin >> str;
         return std::make_shared<StringVariable>(str);
