@@ -21,7 +21,7 @@ I've placed spaces, but they're not required
 | Instruction | Description |
 |:-:|:-:|
 | `$ _ $` | Reads code from the module within dollar signs. If a module contains `$`, an escape sequence (`\$`) can be used |
-| `_ = _ :: _ > _ .` | Define a function with name (first \_) and parameter (second \_) of some type (third \_) returning an expression (last \_). Polymorphism is allowed. |
+| `_ = _ > _ .` | Define a function with name (first \_) and parameter (second \_) of some type (third \_) returning an expression (last \_). Polymorphism is allowed. |
 | `_ ( _ )` | Call function (first \_) with parameter (second \_) |
 | `[ _ :> _ , _ , _ , ... ]` | Expression denoting a list with type first \_ of comma separated sub expressions |
 | `'_'` | Expression denoting a string, just like in other programming languages |
@@ -44,19 +44,19 @@ Code is organized into functions, and the first function called is `main`, which
 
 __Hello World:__
 
-`$std$main=args::[Str]>print('Hello, world!\n').`
+`$std$main=args>print('Hello, world!\n').`
 
 __Truth Machine:__
 
-`$std$i1InfI0Stop=loop::Num>loop?i1InfI0Stop(print(0d1#)):print(0d0#).main=args::[Str]>i1InfI0Stop(input(0d0#)).`
+`$std$i1InfI0Stop=loop>loop?i1InfI0Stop(print(0d1#)):print(0d0#).main=args>i1InfI0Stop(input(0d0#)).`
 
 or
 
 ```
 $std$
-i1InfI0Stop = loop :: Num >
+i1InfI0Stop = loop >
     loop ? i1Inf0Stop(print(0d1#)) : print(0d0#).
-main = args :: [Str] >
+main = args >
     i1InfI0Stop(input(0d0#)).
 ```
 
