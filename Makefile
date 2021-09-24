@@ -35,6 +35,7 @@ all : $(BUILDFLDR)/$(OBJNAME) tests
 endif
 
 .PHONY : clean
+clean:
 ifeq ($(OS),Windows_NT)
 	cmd /k "rmdir /s /q $(BUILDFLDR) & exit"
 	cmd /k "rmdir /s /q $(OBJFLDR) & exit"
