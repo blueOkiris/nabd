@@ -7,6 +7,7 @@
 #include <vector>
 #include <sstream>
 #include <map>
+#include <tuple>
 #include <Utility.hpp>
 #include <Parser.hpp>
 
@@ -40,6 +41,7 @@ const std::map<TokenType, std::string> g_typeStr = {
     { TokenType::Hex,           "Hex" },
     { TokenType::String,        "String" },
     { TokenType::Identifier,    "Identifier" },
+    { TokenType::Error,         "Error" }
 };
 
 std::string Token::str(const uint32_t padding) const {

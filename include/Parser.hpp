@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <tuple>
 
 /*
  * EBNF for nabd
@@ -58,7 +59,8 @@ namespace nabd {
         Type,
         DolSign, EquSign, Period, RArr, LPar, RPar, QMark, Colon, LBrak, RBrak,
         LCurl, RCurl, Comma, TypeOp,
-        Decimal, Hex, String, Identifier
+        Decimal, Hex, String, Identifier,
+        Error
     };
 
     struct Token {
@@ -69,4 +71,18 @@ namespace nabd {
         uint64_t line, col;
         std::vector<Token> children;
     };
+
+    struct ParserResult {
+        Token result;
+        std::string codeLeft;
+        bool success;
+    };
+
+    struct Parser {
+        // Returns (Error, code, false) or (Other Token, rest of code, true)
+        virtual ParserResult parse(const std::string &code) = 0;
+    };
+
+    // Define all these parsers
+    
 }
