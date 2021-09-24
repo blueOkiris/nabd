@@ -14,7 +14,7 @@ using namespace nabd;
 
 #include <std.hpp> // $std$
 
-VariablePointer main(const VariablePointer &args); // main = args > ...
+VariablePointer fake_main(const VariablePointer &args); // main = args > ...
 
 int main(int argc, char **args) {
     std::vector<VariablePointer> argVars;
@@ -23,11 +23,13 @@ int main(int argc, char **args) {
             std::string(args[i])
         ));
     }
-    const auto retVal = main(std::make_shared<ListVariable>(argVars));
-    return static_cast<int>(retVal->toNumber()->value);
+    const auto retVal = fake_main(std::make_shared<ListVariable>(argVars));
+    return static_cast<int>(
+        std::dynamic_pointer_cast<NumberVariable>(retVal->toNumber())->value
+    );
 }
 
 // main = args > print('Hello, world!\n').
-VariablePointer main(const VariablePointer &args) {
+VariablePointer fake_main(const VariablePointer &args) {
     return print(std::make_shared<StringVariable>("Hello, world!\n"));
 }

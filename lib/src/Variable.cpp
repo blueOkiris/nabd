@@ -18,31 +18,39 @@ using namespace nabd;
 VariablePointer listHelper(
         VariablePointer self, const std::vector<VariableType> &subTypes) {
     switch(subTypes[0]) {
-        case VariableType.List: {
+        case VariableType::List: {
             std::vector<VariableType> subSubTypes;
             for(const auto &type : subTypes) {
-                if(type == *(subTypes.first())) {
+                if(type == *(subTypes.begin())) {
                     continue;
                 }
                 subSubTypes.push_back(type);
             }
             
-            return std::make_shared<ListVariable>(std::vector<VariablePointer>(
+            return std::make_shared<ListVariable>(std::vector<VariablePointer>({
                 self->toList(subSubTypes)
-            ));
+            }));
         }
-        case VariableType.Number:
-            return std::make_shared<ListVariable>(std::vector<VariablePointer>(
+        case VariableType::Number:
+            return std::make_shared<ListVariable>(std::vector<VariablePointer>({
                 self->toNumber()
-            ));
-        case VariableType.String:
-            return std::make_shared<ListVariable>(std::vector<VariablePointer>(
+            }));
+        case VariableType::String:
+            return std::make_shared<ListVariable>(std::vector<VariablePointer>({
                 self->toString()
-            ));
-        case VariableType.Tuple:
-            return std::make_shared<ListVariable>(std::vector<VariablePointer>(
+            }));
+        case VariableType::Tuple:
+            return std::make_shared<ListVariable>(std::vector<VariablePointer>({
                 self->toTuple()
-            ));
+            }));
+        
+        default:
+            // Should happen
+            return std::make_shared<ListVariable>(std::vector<VariablePointer>({
+                std::make_shared<StringVariable>(
+                    "randomly created list lol oops"
+                )
+            }));
     }
 }
 
@@ -61,12 +69,13 @@ VariablePointer StringVariable::toNumber(void) const {
 
 VariablePointer StringVariable::toList(
         const std::vector<VariableType> &subTypes) const {
-    return listHelper(std::shared_ptr(this), subTypes);
+    return listHelper(std::make_shared<StringVariable>(value), subTypes);
 }
 
 VariablePointer StringVariable::toTuple(void) const {
     return std::make_shared<TupleVariable>(std::make_pair(
-        std::shared_ptr(this), std::shared_ptr(this)
+        std::make_shared<StringVariable>(value),
+        std::make_shared<StringVariable>(value)
     ));
 }
 
@@ -83,12 +92,13 @@ VariablePointer NumberVariable::toNumber(void) const {
 
 VariablePointer NumberVariable::toList(
         const std::vector<VariableType> &subTypes) const {
-    return listHelper(std::shared_ptr(this), subTypes);
+    return listHelper(std::make_shared<NumberVariable>(value), subTypes);
 }
 
 VariablePointer NumberVariable::toTuple(void) const {
     return std::make_shared<TupleVariable>(std::make_pair(
-        std::shared_ptr(this), std::shared_ptr(this)
+        std::make_shared<NumberVariable>(value),
+        std::make_shared<NumberVariable>(value)
     ));
 }
 
@@ -99,18 +109,26 @@ TupleVariable::TupleVariable(
 
 VariablePointer TupleVariable::toString(void) const {
     return std::make_shared<StringVariable>(
-        "(" + values[0]->toString()->value + ", "
-            + values[1]->toString()->value + ")"
+        "(" +
+            std::dynamic_pointer_cast<StringVariable>(
+                values.first->toString()
+            )->value + ", " + std::dynamic_pointer_cast<StringVariable>(
+                values.second->toString()
+            )->value + ")"
     );
 }
 
 VariablePointer TupleVariable::toNumber(void) const {
-    return std::make_shared<NumberVariable>(values[0]->toNumber()->value);
+    return std::make_shared<NumberVariable>(
+        std::dynamic_pointer_cast<NumberVariable>(
+            values.first->toNumber()
+        )->value
+    );
 }
 
 VariablePointer TupleVariable::toList(
         const std::vector<VariableType> &subTypes) const {
-    return listHelper(std::shared_ptr(this), subTypes);
+    return listHelper(std::make_shared<TupleVariable>(values), subTypes);
 }
 
 VariablePointer TupleVariable::toTuple(void) const {
@@ -126,8 +144,9 @@ VariablePointer ListVariable::toString(void) const {
     std::stringstream listStr;
     listStr << "{";
     for(const auto value : values) {
-        listStr << value->toString()->value;
-        if(listStr != *(values.begin()) {
+        listStr <<
+            std::dynamic_pointer_cast<StringVariable>(value->toString())->value;
+        if(value != *(values.begin())) {
             listStr << ", ";
         }
     }
@@ -135,7 +154,9 @@ VariablePointer ListVariable::toString(void) const {
 }
 
 VariablePointer ListVariable::toNumber(void) const {
-    return std::make_shared<NumberVariable>(values[0]->toNumber()->value);
+    return std::make_shared<NumberVariable>(
+        std::dynamic_pointer_cast<NumberVariable>(values[0]->toNumber())->value
+    );
 }
 
 VariablePointer ListVariable::toList(
@@ -145,6 +166,7 @@ VariablePointer ListVariable::toList(
 
 VariablePointer ListVariable::toTuple(void) const {
     return std::make_shared<TupleVariable>(std::make_pair(
-        std::shared_ptr(this), std::shared_ptr(this)
+        std::make_shared<ListVariable>(values),
+        std::make_shared<ListVariable>(values)
     ));
 }

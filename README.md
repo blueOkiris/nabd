@@ -48,7 +48,7 @@ __Hello World:__
 
 __Truth Machine:__
 
-`$std$i1InfI0Stop=loop>loop?i1InfI0Stop(print(0d1#)):print(0d0#).main=args>i1InfI0Stop(input(0d0#)).`
+`$std$i1InfI0Stop=loop>loop?i1InfI0Stop(print(0d1#)):print(0d0#).main=args>i1InfI0Stop(parseNum(input(0d0#))).`
 
 or
 
@@ -57,7 +57,8 @@ $std$
 i1InfI0Stop = loop >
     loop ? i1Inf0Stop(print(0d1#)) : print(0d0#).
 main = args >
-    i1InfI0Stop(input(0d0#)).
+    i1InfI0Stop(
+        parseNum(input(0d0#))).
 ```
 
 ## Standard Library Functions
@@ -76,3 +77,4 @@ It will be increased overtime
  - `gte` - same as greater but with \>=
  - `lse` - same as greater but with \<=
  - `ne` - same as greater but with !=
+ - `parseNum` - don't just cast to a number, but try to actually parse a number out
