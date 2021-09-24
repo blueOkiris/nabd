@@ -5,9 +5,13 @@
 
 #pragma once
 
+#include <string>
+#include <vector>
+
 /*
  * EBNF for nabd
  *
+ * <program> ::=        { (<include> | <func-def>) }
  * <include> ::=        <dol-sign> <identifier> <dol-sign>
  * <func-def> ::=       <identifier> <equ-sign> <identifier> <rarr>
  *                      <expr> <period>
@@ -49,11 +53,20 @@
 
 namespace nabd {
     enum class TokenType {
-        Include, FuncDef,
+        Program, Include, FuncDef,
         FuncCall, Ternary, ListDef, TupDef, Expr,
         Type,
         DolSign, EquSign, Period, RArr, LPar, RPar, QMark, Colon, LBrak, RBrak,
         LCurl, RCurl, Comma, TypeOp,
         Decimal, Hex, String, Identifier
+    };
+
+    struct Token {
+        std::string str(const uint32_t padding = 0) const;
+
+        TokenType type;
+        std::string value;
+        uint64_t line, col;
+        std::vector<Token> children;
     };
 }
