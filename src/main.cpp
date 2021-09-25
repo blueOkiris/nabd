@@ -9,7 +9,7 @@
 using namespace nabd;
 
 int main(const int argc, const char **args) {
-    const auto code = readFile("examples/ParserTest.nabd");
+    const auto code = readFile("examples/TruthMachine.nabd");
     
     // Note: this fails out, so no check for success
     const auto progParserResult = parser::parseProgram(code, 0, 1, 1);
