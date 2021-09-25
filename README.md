@@ -55,7 +55,7 @@ or
 ```
 $std$
 i1InfI0Stop = loop >
-    loop ? i1Inf0Stop(print(0d1#)) : print(0d0#).
+    ! loop ? i1Inf0Stop(print(0d1#)) : print(0d0#).
 main = args >
     i1InfI0Stop(
         parseNum(input(0d0#))).
