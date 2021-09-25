@@ -1,0 +1,13 @@
+$std$
+
+i1InfI0Stop = loop >
+    ! loop ? i1InfI0Stop(print(0d1#)) : print(0x0#).
+
+main = args >
+    i1InfI0Stop({
+        Num :> parseNum([ Str :> input(0d0#), input(0d0#), input(0d0#),]),
+        {[Str], Num} :> {
+            [Str] :> [ Str :> 'Doesn\'t Matter', 'Cheese\\!' ],
+            Num :> 0x1Fe#
+        }
+    }).

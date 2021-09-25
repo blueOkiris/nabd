@@ -101,8 +101,8 @@ parser::ParserResult parser::parseProgram(
         // Otherwise fail
         errorOut(
             std::string("Could not parse include or func def on ln ")
-                + std::to_string(newLine) + std::string(", col ")
-                + std::to_string(newCol)
+                + std::to_string(isFuncDef.newLine) + std::string(", col ")
+                + std::to_string(isFuncDef.newCol)
         );
     }
     return {
@@ -120,7 +120,7 @@ parser::ParserResult parser::parseInclude(
     if(!firstSign.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newLine = firstSign.newLine;
@@ -131,7 +131,7 @@ parser::ParserResult parser::parseInclude(
     if(!modName.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newLine = modName.newLine;
@@ -142,7 +142,7 @@ parser::ParserResult parser::parseInclude(
     if(!secondSign.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newLine = secondSign.newLine;
@@ -229,7 +229,7 @@ parser::ParserResult parser::parseFuncDef(
     if(!equSign.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = equSign.newInd;
@@ -240,7 +240,7 @@ parser::ParserResult parser::parseFuncDef(
     if(!paramName.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = paramName.newInd;
@@ -251,7 +251,7 @@ parser::ParserResult parser::parseFuncDef(
     if(!rightArr.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = rightArr.newInd;
@@ -262,7 +262,7 @@ parser::ParserResult parser::parseFuncDef(
     if(!expr.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = expr.newInd;
@@ -273,7 +273,7 @@ parser::ParserResult parser::parseFuncDef(
     if(!period.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = period.newInd;
@@ -451,7 +451,7 @@ parser::ParserResult parser::parseFuncCall(
     if(!lPar.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = lPar.newInd;
@@ -462,7 +462,7 @@ parser::ParserResult parser::parseFuncCall(
     if(!paramVal.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = paramVal.newInd;
@@ -473,7 +473,7 @@ parser::ParserResult parser::parseFuncCall(
     if(!rPar.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = rPar.newInd;
@@ -513,7 +513,7 @@ parser::ParserResult parser::parseTernary(
     if(!testExpr.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = testExpr.newInd;
@@ -524,7 +524,7 @@ parser::ParserResult parser::parseTernary(
     if(!qMark.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = qMark.newInd;
@@ -535,7 +535,7 @@ parser::ParserResult parser::parseTernary(
     if(!trueExpr.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = trueExpr.newInd;
@@ -546,7 +546,7 @@ parser::ParserResult parser::parseTernary(
     if(!colon.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = colon.newInd;
@@ -557,7 +557,7 @@ parser::ParserResult parser::parseTernary(
     if(!falseExpr.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = falseExpr.newInd;
@@ -706,6 +706,8 @@ parser::ParserResult parser::parseString(
         }
         newInd++;
     }
+    newCol++;
+    newInd++;
     return {
         {
             TokenType::String, str.str(),
@@ -731,7 +733,7 @@ parser::ParserResult parser::parseDecimal(
     if(newInd >= code.length() || code[newInd] != 'd') {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd++;
@@ -739,7 +741,7 @@ parser::ParserResult parser::parseDecimal(
     if(newInd >= code.length() || !isDigit(code[newInd])) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     std::stringstream numStr;
@@ -763,7 +765,7 @@ parser::ParserResult parser::parseDecimal(
     if(newInd >= code.length() || code[newInd] != '#') {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd++;
@@ -793,7 +795,7 @@ parser::ParserResult parser::parseHex(
     if(newInd >= code.length() || code[newInd] != 'x') {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd++;
@@ -801,20 +803,20 @@ parser::ParserResult parser::parseHex(
     if(newInd >= code.length()
             || !(
                 isDigit(code[newInd])
-                    || (code[index] >= 'A' && code[index] <= 'F')
-                    || (code[index] >= 'a' && code[index] <= 'f')
+                    || (code[newInd] >= 'A' && code[newInd] <= 'F')
+                    || (code[newInd] >= 'a' && code[newInd] <= 'f')
             )) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     std::stringstream numStr;
     while(newInd < code.length()
             && (
                 isDigit(code[newInd])
-                    || (code[index] >= 'A' && code[index] <= 'F')
-                    || (code[index] >= 'a' && code[index] <= 'f')
+                    || (code[newInd] >= 'A' && code[newInd] <= 'F')
+                    || (code[newInd] >= 'a' && code[newInd] <= 'f')
             )) {
         numStr << code[newInd];
         
@@ -824,7 +826,7 @@ parser::ParserResult parser::parseHex(
     if(newInd >= code.length() || code[newInd] != '#') {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd++;
@@ -857,7 +859,7 @@ parser::ParserResult parser::parseTupDef(
     if(!type1.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = type1.newInd;
@@ -868,7 +870,7 @@ parser::ParserResult parser::parseTupDef(
     if(!typeOp1.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = typeOp1.newInd;
@@ -879,7 +881,7 @@ parser::ParserResult parser::parseTupDef(
     if(!expr1.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = expr1.newInd;
@@ -890,7 +892,7 @@ parser::ParserResult parser::parseTupDef(
     if(!comma.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = comma.newInd;
@@ -898,10 +900,10 @@ parser::ParserResult parser::parseTupDef(
     newCol = comma.newCol;
 
     const auto type2 = parseType(code, newInd, newLine, newCol);
-    if(!expr1.success) {
+    if(!type2.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = type2.newInd;
@@ -912,7 +914,7 @@ parser::ParserResult parser::parseTupDef(
     if(!typeOp2.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = typeOp2.newInd;
@@ -923,7 +925,7 @@ parser::ParserResult parser::parseTupDef(
     if(!expr2.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = expr2.newInd;
@@ -934,7 +936,7 @@ parser::ParserResult parser::parseTupDef(
     if(!rCurl.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = rCurl.newInd;
@@ -1047,7 +1049,7 @@ parser::ParserResult parser::parseStrTpName(
     if(newInd >= code.length() || code[newInd] != 't') {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newCol++;
@@ -1055,7 +1057,7 @@ parser::ParserResult parser::parseStrTpName(
     if(newInd >= code.length() || code[newInd] != 'r') {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newCol++;
@@ -1084,7 +1086,7 @@ parser::ParserResult parser::parseNumTpName(
     if(newInd >= code.length() || code[newInd] != 'u') {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newCol++;
@@ -1092,7 +1094,7 @@ parser::ParserResult parser::parseNumTpName(
     if(newInd >= code.length() || code[newInd] != 'm') {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newCol++;
@@ -1125,7 +1127,7 @@ parser::ParserResult parser::parseLsTp(
     if(!type.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = type.newInd;
@@ -1136,7 +1138,7 @@ parser::ParserResult parser::parseLsTp(
     if(!rBrak.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = rBrak.newInd;
@@ -1213,7 +1215,7 @@ parser::ParserResult parser::parseTupTp(
     if(!type1.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = type1.newInd;
@@ -1224,7 +1226,7 @@ parser::ParserResult parser::parseTupTp(
     if(!comma.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = comma.newInd;
@@ -1235,7 +1237,7 @@ parser::ParserResult parser::parseTupTp(
     if(!type2.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = type2.newInd;
@@ -1246,7 +1248,7 @@ parser::ParserResult parser::parseTupTp(
     if(!rCurl.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = rCurl.newInd;
@@ -1283,7 +1285,7 @@ parser::ParserResult parser::parseTypeOp(
     if(newInd >= code.length() || code[newInd] != '>') {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newCol++;
@@ -1354,7 +1356,7 @@ parser::ParserResult parser::parseListDef(
     if(!type.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = type.newInd;
@@ -1366,7 +1368,7 @@ parser::ParserResult parser::parseListDef(
     if(!typeOp.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = typeOp.newInd;
@@ -1406,7 +1408,7 @@ parser::ParserResult parser::parseListDef(
     if(!rBrak.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
+            newLine, newCol, newInd, false
         };
     }
     newInd = rBrak.newInd;
