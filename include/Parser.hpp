@@ -17,7 +17,7 @@
  * <func-def> ::=       <identifier> <equ-sign> <identifier> <rarr>
  *                      <expr> <period>
  * <func-call> ::=      <identifier> <lpar> <expr> <rpar>
- * <ternary> ::=        <expression> <q-mark> <expr> <colon> <expr>
+ * <ternary> ::=        <exclam> <expr> <q-mark> <expr> <colon> <expr>
  * 
  * <list-def> ::=       <lbrak> <type> <type-op> { <exp> { <comma> <expr> } }
  * <tup-def> ::=        <lcurl> <type> <type-op> <expr> <comma>
@@ -27,9 +27,10 @@
  *                      <string> | <decimal> | <hex> |
  *                      <tup-def> | <list-def>
  * 
- * <type> ::=           'Str' | 'Num' |
- *                      <lbrak> <type> <rbrak> |
- *                      <lcurl> <type> <comma> <type> <rcurl>
+ * <type> ::=           <str-tp-name> | <num-tp-name> |
+ *                      <ls-tp> | <tup-tp>
+ * <ls-tp> ::=          <lbrak> <type> <rbrak>
+ * <tup-tp> ::=         <lcurl> <type> <comma> <type> <rcurl>
  * 
  * <dol-sign> ::=       '$'
  * <equ-sign> ::=       '='
@@ -45,8 +46,11 @@
  * <rcurl> ::=          '}'
  * <comma> ::=          ','
  * <type-op> ::=        ':>'
+ * <exclam> ::=         '!'
  * 
- * <decimal> ::=        /0d[0-9]+(\.[0-9])*#/
+ * <str-tp-name> :=     'Str'
+ * <num-tp-name> :=     'Num'
+ * <decimal> ::=        /0d[0-9]+(\.[0-9]*)*#/
  * <hex> ::=            /0x[0-9a-fA-F]+#/
  * <string> ::=         /'(\\.|[^\\'])*'
  * <identifier> ::=     /[A-Za-z_][A-Za-z_0-9]+/
@@ -56,9 +60,9 @@ namespace nabd {
     enum class TokenType {
         Program, Include, FuncDef,
         FuncCall, Ternary, ListDef, TupDef, Expr,
-        Type,
+        StrTpName, NumTpName, LsTp, TupTp, Type,
         DolSign, EquSign, Period, RArr, LPar, RPar, QMark, Colon, LBrak, RBrak,
-        LCurl, RCurl, Comma, TypeOp,
+        LCurl, RCurl, Comma, TypeOp, Exclam,
         Decimal, Hex, String, Identifier,
         Error
     };
@@ -115,6 +119,22 @@ namespace nabd {
             const uint64_t curLine, const uint64_t curCol
         );
         ParserResult parseExpr(
+            const std::string &code, const uint64_t index,
+            const uint64_t curLine, const uint64_t curCol
+        );
+        ParserResult parseStrTpName(
+            const std::string &code, const uint64_t index,
+            const uint64_t curLine, const uint64_t curCol
+        );
+        ParserResult parseNumTpName(
+            const std::string &code, const uint64_t index,
+            const uint64_t curLine, const uint64_t curCol
+        );
+        ParserResult parseLsTp(
+            const std::string &code, const uint64_t index,
+            const uint64_t curLine, const uint64_t curCol
+        );
+        ParserResult parseTupTp(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
         );
@@ -175,6 +195,10 @@ namespace nabd {
             const uint64_t curLine, const uint64_t curCol
         );
         ParserResult parseTypeOp(
+            const std::string &code, const uint64_t index,
+            const uint64_t curLine, const uint64_t curCol
+        );
+        ParserResult parseExclam(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
         );

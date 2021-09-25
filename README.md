@@ -28,7 +28,7 @@ I've placed spaces, but they're not required
 | `0d_#` | Expression denoting a decimal number. |
 | `0x_#` | Enter a number as hex |
 | `{ _ :> _ , _ :> _ }` | Expression denoting a tuple |
-| `_ ? _ : _` | If an expression converted to a number is > 0, then expression is first, otherwise second
+| `! _ ? _ : _` | If an expression converted to a number is > 0, then expression is first, otherwise second
 
 Types:
  - `Str` - a string
@@ -48,7 +48,7 @@ __Hello World:__
 
 __Truth Machine:__
 
-`$std$i1InfI0Stop=loop>loop?i1InfI0Stop(print(0d1#)):print(0d0#).main=args>i1InfI0Stop(parseNum(input(0d0#))).`
+`$std$i1InfI0Stop=!loop>loop?i1InfI0Stop(print(0d1#)):print(0d0#).main=args>i1InfI0Stop(parseNum(input(0d0#))).`
 
 or
 
