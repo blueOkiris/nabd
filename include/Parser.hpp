@@ -25,7 +25,7 @@
  * 
  * <expr> ::=           <func-call> | <ternary> |
  *                      <string> | <decimal> | <hex> |
- *                      <tup-def> | <list-def>
+ *                      <tup-def> | <list-def> | <identifier>
  * 
  * <type> ::=           <str-tp-name> | <num-tp-name> |
  *                      <ls-tp> | <tup-tp>

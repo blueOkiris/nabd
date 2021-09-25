@@ -21,6 +21,10 @@ const std::map<TokenType, std::string> g_typeStr = {
     { TokenType::Ternary,       "Ternary" },
     { TokenType::ListDef,       "ListDef" },
     { TokenType::TupDef,        "TupDef" },
+    { TokenType::StrTpName,     "StrTpName" },
+    { TokenType::NumTpName,     "NumTpName" },
+    { TokenType::LsTp,          "LsTp" },
+    { TokenType::TupTp,         "TupTp" },
     { TokenType::Expr,          "Expr" },
     { TokenType::Type,          "Type" },
     { TokenType::DolSign,       "DolSign" },
@@ -37,6 +41,7 @@ const std::map<TokenType, std::string> g_typeStr = {
     { TokenType::RCurl,         "RCurl" },
     { TokenType::Comma,         "Comma" },
     { TokenType::TypeOp,        "TypeOp" },
+    { TokenType::Exclam,        "Exclam" },
     { TokenType::Decimal,       "Decimal" },
     { TokenType::Hex,           "Hex" },
     { TokenType::String,        "String" },
@@ -56,10 +61,8 @@ std::string Token::str(const uint32_t padding) const {
     if(line != 0 && col != 0) {
         tokStr << " on ln " << line << ", col " << col;
     }
-    if(children.size() < 0) {
-        for(const auto &child : children) {
-            tokStr << '\n' << child.str(padding + 1);
-        }
+    for(const auto &child : children) {
+        tokStr << '\n' << child.str(padding + 1);
     }
     return tokStr.str();
 }
@@ -80,6 +83,7 @@ parser::ParserResult parser::parseProgram(
             newLine = isInclude.newLine;
             newCol = isInclude.newCol;
             newInd = isInclude.newInd;
+            eatWhiteSpace(code, newInd, newLine, newCol);
             continue;
         }
 
@@ -90,6 +94,7 @@ parser::ParserResult parser::parseProgram(
             newLine = isFuncDef.newLine;
             newCol = isFuncDef.newCol;
             newInd = isFuncDef.newInd;
+            eatWhiteSpace(code, newInd, newLine, newCol);
             continue;
         }
 
@@ -407,6 +412,17 @@ parser::ParserResult parser::parseExpr(
             }, isLs.newLine, isLs.newCol, isLs.newInd, true
         };
     }
+    
+    // Try to get an identifier last
+    const auto ident = parseIdentifier(code, index, curLine, curCol);
+    if(ident.success) {
+        return {
+            {
+                TokenType::Expr, "", 0, 0,
+                std::vector<Token>({ ident.result }) 
+            }, ident.newLine, ident.newCol, ident.newInd, true
+        };
+    }
 
     // Otherwise fail
     return {
@@ -644,7 +660,7 @@ parser::ParserResult parser::parseRPar(
         const uint64_t curLine, const uint64_t curCol) {
     auto newLine = curLine, newCol = curCol, newInd = index;
     eatWhiteSpace(code, newInd, newLine, newCol);
-    if(code[newInd] != '(') {
+    if(code[newInd] != ')') {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
             curLine, curCol, index, false
@@ -653,7 +669,7 @@ parser::ParserResult parser::parseRPar(
     newCol++;
     newInd++;
     return {
-        { TokenType::RPar, "(", newLine, newCol - 1, std::vector<Token>() },
+        { TokenType::RPar, ")", newLine, newCol - 1, std::vector<Token>() },
         newLine, newCol, newInd, true
     };
 }
@@ -676,19 +692,19 @@ parser::ParserResult parser::parseString(
     while(newInd < code.length() && code[newInd] != '\'') {
         str << code[newInd];
 
-        if(code[index] == '\\' && newInd + 1 < code.length()) {
+        if(code[newInd] == '\\' && newInd + 1 < code.length()) {
             newInd++;
             newCol++;
             str << code[newInd];
         }
         
-        newInd++;
-        if(code[index] == '\n') {
+        if(code[newInd] == '\n') {
             newLine++;
             newCol = 1;
         } else {
             newCol++;
         }
+        newInd++;
     }
     return {
         {
@@ -750,6 +766,8 @@ parser::ParserResult parser::parseDecimal(
             curLine, curCol, index, false
         };
     }
+    newInd++;
+    newCol++;
     return {
         {
             TokenType::Decimal, numStr.str(),
@@ -809,6 +827,8 @@ parser::ParserResult parser::parseHex(
             curLine, curCol, index, false
         };
     }
+    newInd++;
+    newCol++;
     return {
         {
             TokenType::Hex, numStr.str(),

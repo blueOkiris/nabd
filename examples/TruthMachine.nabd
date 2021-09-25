@@ -1,7 +1,7 @@
 $std$
 
 i1InfI0Stop = loop >
-    loop ? i1InfI0Stop(print(0d1#)) : print(0x0#).
+    ! loop ? i1InfI0Stop(print(0d1#)) : print(0x0#).
 
 main = args >
     i1InfI0Stop(

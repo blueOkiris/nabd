@@ -50,13 +50,13 @@ namespace nabd {
             const std::string &code,
             uint64_t &index, uint64_t &line, uint64_t &col) {
         while(isWhiteSpace(code[index])) {
-            index++;
             if(code[index] == '\n') {
                 line++;
                 col = 1;
             } else {
                 col++;
             }
+            index++;
         }
     }
 }
