@@ -72,208 +72,127 @@ namespace nabd {
         std::vector<Token> children;
     };
 
-    struct ParserResult {
-        Token result;
-        uint64_t newLine, newCol, newInd;
-        bool success;
-    };
+    /*
+     * This is the base form of a parser:
+     * ParserResult parse(
+     *     const std::string &code, const uint64_t index,
+     *     const uint64_t curLine, const uint64_t curCol
+     * );
+     */
+    namespace parser {
+        struct ParserResult {
+            Token result;
+            uint64_t newLine, newCol, newInd;
+            bool success;
+        };
 
-    struct Parser {
-        // Returns (Error, code, false) or (Other Token, rest of code, true)
-        virtual ParserResult parse(
+        ParserResult parseProgram(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const = 0;
-    };
-
-    /* Define all these parsers */
-
-    struct ProgramParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseInclude(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct IncludeParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseFuncDef(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct FuncDefParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseFuncCall(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct FuncCallParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseTernary(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct ListDefParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseListDef(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct TernaryParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseTupDef(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct TupDefParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseExpr(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct ExprParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseType(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct TypeParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseDolSign(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct DolSignParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseEquSign(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct EquSignParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parsePeriod(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct PeriodParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseRArr(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct RArrParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseLPar(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct LParParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseRPar(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct RParParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseQMark(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct QMarkParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseColon(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct ColonParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseLBrak(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct LBrakParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseRBrak(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct RBrakParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseLCurl(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct LCurlParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseRCurl(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct RCurlParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseComma(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct CommaParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseTypeOp(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct TypeOpParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseDecimal(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct DecimalParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseHex(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct HexParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseString(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct StringParser : public Parser {
-        ParserResult parse(
+        );
+        ParserResult parseIdentifier(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
-
-    struct IdentifierParser : public Parser {
-        ParserResult parse(
-            const std::string &code, const uint64_t index,
-            const uint64_t curLine, const uint64_t curCol
-        ) const override;
-    };
+        );
+    }
 }

@@ -66,16 +66,15 @@ std::string Token::str(const uint32_t padding) const {
 
 /* Parser implementations */
 
-ParserResult ProgramParser::parse(
+parser::ParserResult parser::parseProgram(
         const std::string &code, const uint64_t index,
-        const uint64_t curLine, const uint64_t curCol) const {
+        const uint64_t curLine, const uint64_t curCol) {
     auto newLine = curLine, newCol = curCol, newInd = index;
     std::vector<Token> subTokens;
 
     while(newInd < code.length()) {
         // Try to get an include at the top level
-        const IncludeParser inc;
-        const auto isInclude = inc.parse(code, newInd, newLine, newCol);
+        const auto isInclude = parseInclude(code, newInd, newLine, newCol);
         if(isInclude.success) {
             subTokens.push_back(isInclude.result);
             newLine = isInclude.newLine;
@@ -85,9 +84,8 @@ ParserResult ProgramParser::parse(
         }
 
         // Try to get an func def at the top level
-        const FuncDefParser funcDef;
-        const auto isFuncDef = funcDef.parse(code, newInd, newLine, newCol);
-        if(isInclude.success) {
+        const auto isFuncDef = parseFuncDef(code, newInd, newLine, newCol);
+        if(isFuncDef.success) {
             subTokens.push_back(isFuncDef.result);
             newLine = isFuncDef.newLine;
             newCol = isFuncDef.newCol;
@@ -108,50 +106,49 @@ ParserResult ProgramParser::parse(
     };
 }
 
-ParserResult IncludeParser::parse(
+parser::ParserResult parser::parseInclude(
         const std::string &code, const uint64_t index,
-        const uint64_t curLine, const uint64_t curCol) const {
+        const uint64_t curLine, const uint64_t curCol) {
     auto newLine = curLine, newCol = curCol, newInd = index;
-    std::vector<Token> subTokens;
 
-    const DolSignParser dolParser;
-    const auto firstSign = dolParser.parse(code, newInd, newLine, newCol);
+    const auto firstSign = parseDolSign(code, newInd, newLine, newCol);
     if(!firstSign.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
+            curLine, curCol, index, false
         };
     }
     newLine = firstSign.newLine;
     newCol = firstSign.newCol;
     newInd = firstSign.newInd;
 
-    const IdentifierParser identParser;
-    const auto modName = identParser.parse(code, newInd, newLine, newCol);
+    const auto modName = parseIdentifier(code, newInd, newLine, newCol);
     if(!modName.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
+            curLine, curCol, index, false
         };
     }
     newLine = modName.newLine;
     newCol = modName.newCol;
     newInd = modName.newInd;
 
-    const auto secondSign = dolParser.parse(code, newInd, newLine, newCol);
+    const auto secondSign = parseDolSign(code, newInd, newLine, newCol);
     if(!secondSign.success) {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
+            curLine, curCol, index, false
         };
     }
     newLine = secondSign.newLine;
     newCol = secondSign.newCol;
     newInd = secondSign.newInd;
 
-    subTokens.push_back(firstSign.result);
-    subTokens.push_back(modName.result);
-    subTokens.push_back(secondSign.result);
+    std::vector<Token> subTokens({
+        firstSign.result,
+        modName.result,
+        secondSign.result
+    });
 
     return {
         { TokenType::Include, "", 0, 0, subTokens },
@@ -159,44 +156,35 @@ ParserResult IncludeParser::parse(
     };
 }
 
-ParserResult FuncDefParser::parse(
+parser::ParserResult parser::parseDolSign(
         const std::string &code, const uint64_t index,
-        const uint64_t curLine, const uint64_t curCol) const {
-    return {
-        { TokenType::Error, "", 0, 0, std::vector<Token>() },
-        curLine, curCol, index, false
-    };
-}
-
-ParserResult DolSignParser::parse(
-        const std::string &code, const uint64_t index,
-        const uint64_t curLine, const uint64_t curCol) const {
+        const uint64_t curLine, const uint64_t curCol) {
     auto newLine = curLine, newCol = curCol, newInd = index;
     eatWhiteSpace(code, newInd, newLine, newCol);
     if(code[newInd] != '$') {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
+            curLine, curCol, index, false
         };
     }
     newCol++;
     newInd++;
     return {
-        { TokenType::DolSign, "$", newLine, newCol, std::vector<Token>() },
+        { TokenType::DolSign, "$", newLine, newCol - 1, std::vector<Token>() },
         newLine, newCol, newInd, true
     };
 }
 
-ParserResult IdentifierParser::parse(
+parser::ParserResult parser::parseIdentifier(
         const std::string &code, const uint64_t index,
-        const uint64_t curLine, const uint64_t curCol) const {
+        const uint64_t curLine, const uint64_t curCol) {
     auto newLine = curLine, newCol = curCol, newInd = index;
     eatWhiteSpace(code, newInd, newLine, newCol);
     auto startLine = newLine, startCol = newCol;
     if(!isAlpha(code[newInd]) && code[newInd] != '_') {
         return {
             { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
+            curLine, curCol, index, false
         };
     }
     std::stringstream ident;
@@ -209,8 +197,260 @@ ParserResult IdentifierParser::parse(
     }
     return {
         {
-            TokenType::String, ident.str(),
+            TokenType::Identifier, ident.str(),
             startLine, startCol, std::vector<Token>()
         }, newLine, newCol, newInd, true
+    };
+}
+
+parser::ParserResult parser::parseFuncDef(
+        const std::string &code, const uint64_t index,
+        const uint64_t curLine, const uint64_t curCol) {
+    auto newLine = curLine, newCol = curCol, newInd = index;
+
+    const auto ident = parseIdentifier(code, newInd, newLine, newCol);
+    if(!ident.success) {
+        return {
+            { TokenType::Error, "", 0, 0, std::vector<Token>() },
+            curLine, curCol, index, false
+        };
+    }
+    newInd = ident.newInd;
+    newLine = ident.newLine;
+    newCol = ident.newCol;
+
+    const auto equSign = parseEquSign(code, newInd, newLine, newCol);
+    if(!equSign.success) {
+        return {
+            { TokenType::Error, "", 0, 0, std::vector<Token>() },
+            curLine, curCol, index, false
+        };
+    }
+    newInd = equSign.newInd;
+    newLine = equSign.newLine;
+    newCol = equSign.newCol;
+
+    const auto paramName = parseIdentifier(code, newInd, newLine, newCol);
+    if(!paramName.success) {
+        return {
+            { TokenType::Error, "", 0, 0, std::vector<Token>() },
+            curLine, curCol, index, false
+        };
+    }
+    newInd = paramName.newInd;
+    newLine = paramName.newLine;
+    newCol = paramName.newCol;
+
+    const auto rightArr = parseRArr(code, newInd, newLine, newCol);
+    if(!rightArr.success) {
+        return {
+            { TokenType::Error, "", 0, 0, std::vector<Token>() },
+            curLine, curCol, index, false
+        };
+    }
+    newInd = rightArr.newInd;
+    newLine = rightArr.newLine;
+    newCol = rightArr.newCol;
+
+    const auto expr = parseExpr(code, newInd, newLine, newCol);
+    if(!expr.success) {
+        return {
+            { TokenType::Error, "", 0, 0, std::vector<Token>() },
+            curLine, curCol, index, false
+        };
+    }
+    newInd = expr.newInd;
+    newLine = expr.newLine;
+    newCol = expr.newCol;
+
+    const auto period = parsePeriod(code, newInd, newLine, newCol);
+    if(!period.success) {
+        return {
+            { TokenType::Error, "", 0, 0, std::vector<Token>() },
+            curLine, curCol, index, false
+        };
+    }
+    newInd = period.newInd;
+    newLine = period.newLine;
+    newCol = period.newCol;
+
+    const std::vector<Token> subTokens({
+        ident.result,
+        equSign.result,
+        paramName.result,
+        rightArr.result,
+        expr.result,
+        period.result
+    });
+
+    return {
+        { TokenType::FuncDef, "", 0, 0, subTokens },
+        newLine, newCol, newInd, true
+    };
+}
+
+parser::ParserResult parser::parseEquSign(
+        const std::string &code, const uint64_t index,
+        const uint64_t curLine, const uint64_t curCol) {
+    auto newLine = curLine, newCol = curCol, newInd = index;
+    eatWhiteSpace(code, newInd, newLine, newCol);
+    if(code[newInd] != '=') {
+        return {
+            { TokenType::Error, "", 0, 0, std::vector<Token>() },
+            curLine, curCol, index, false
+        };
+    }
+    newCol++;
+    newInd++;
+    return {
+        { TokenType::EquSign, "=", newLine, newCol - 1, std::vector<Token>() },
+        newLine, newCol, newInd, true
+    };
+}
+
+parser::ParserResult parser::parseRArr(
+        const std::string &code, const uint64_t index,
+        const uint64_t curLine, const uint64_t curCol) {
+    auto newLine = curLine, newCol = curCol, newInd = index;
+    eatWhiteSpace(code, newInd, newLine, newCol);
+    if(code[newInd] != '>') {
+        return {
+            { TokenType::Error, "", 0, 0, std::vector<Token>() },
+            curLine, curCol, index, false
+        };
+    }
+    newCol++;
+    newInd++;
+    return {
+        { TokenType::EquSign, ">", newLine, newCol - 1, std::vector<Token>() },
+        newLine, newCol, newInd, true
+    };
+}
+
+parser::ParserResult parser::parseExpr(
+        const std::string &code, const uint64_t index,
+        const uint64_t curLine, const uint64_t curCol) {
+    /*// Try to get a func call
+    const auto isCall = parseFuncCall(code, index, curLine, curCol);
+    if(isCall.success) {
+        return {
+            {
+                TokenType::Expr, "", 0, 0,
+                std::vector<Token>({ isCall.result })
+            }, isCall.newLine, isCall.newCol, isCall.newInd, true
+        };
+    }
+
+    // Try to get an ternary
+    const auto isTernary = parseTernary(code, index, curLine, curCol);
+    if(isTernary.success) {
+        return {
+            {
+                TokenType::Expr, "", 0, 0,
+                std::vector<Token>({ isTernary.result }) 
+            }, isTernary.newLine, isTernary.newCol, isTernary.newInd, true
+        };
+    }
+    
+    // Try to get a string
+    const auto isString = parseString(code, index, curLine, curCol);
+    if(isString.success) {
+        return {
+            {
+                TokenType::Expr, "", 0, 0,
+                std::vector<Token>({ isString.result }) 
+            }, isString.newLine, isString.newCol, isString.newInd, true
+        };
+    }
+    
+    // Try to get a decimal number
+    const auto isDecimal = parseDecimal(code, index, curLine, curCol);
+    if(isDecimal.success) {
+        return {
+            {
+                TokenType::Expr, "", 0, 0,
+                std::vector<Token>({ isDecimal.result }) 
+            }, isDecimal.newLine, isDecimal.newCol, isDecimal.newInd, true
+        };
+    }
+    
+    // Try to get a hex number
+    const auto isHex = parseHex(code, index, curLine, curCol);
+    if(isHex.success) {
+        return {
+            {
+                TokenType::Expr, "", 0, 0,
+                std::vector<Token>({ isHex.result }) 
+            }, isHex.newLine, isHex.newCol, isHex.newInd, true
+        };
+    }
+    
+    // Try to get a hex number
+    const auto isHex = parseHex(code, index, curLine, curCol);
+    if(isHex.success) {
+        return {
+            {
+                TokenType::Expr, "", 0, 0,
+                std::vector<Token>({ isHex.result }) 
+            }, isHex.newLine, isHex.newCol, isHex.newInd, true
+        };
+    }
+    
+    // Try to get a hex number
+    const auto isHex = parseHex(code, index, curLine, curCol);
+    if(isHex.success) {
+        return {
+            {
+                TokenType::Expr, "", 0, 0,
+                std::vector<Token>({ isHex.result }) 
+            }, isHex.newLine, isHex.newCol, isHex.newInd, true
+        };
+    }
+    
+    // Try to get a tuple
+    const auto isTup = parseTupDef(code, index, curLine, curCol);
+    if(isTup.success) {
+        return {
+            {
+                TokenType::Expr, "", 0, 0,
+                std::vector<Token>({ isTup.result }) 
+            }, isTup.newLine, isTup.newCol, isTup.newInd, true
+        };
+    }
+    
+    // Try to get a list
+    const auto isLs = parseListDef(code, index, curLine, curCol);
+    if(isLs.success) {
+        return {
+            {
+                TokenType::Expr, "", 0, 0,
+                std::vector<Token>({ isLs.result }) 
+            }, isLs.newLine, isLs.newCol, isLs.newInd, true
+        };
+    }*/
+
+    // Otherwise fail
+    return {
+        { TokenType::Error, "", 0, 0, std::vector<Token>() },
+        curLine, curCol, index, false
+    };
+}
+
+parser::ParserResult parser::parsePeriod(
+        const std::string &code, const uint64_t index,
+        const uint64_t curLine, const uint64_t curCol) {
+    auto newLine = curLine, newCol = curCol, newInd = index;
+    eatWhiteSpace(code, newInd, newLine, newCol);
+    if(code[newInd] != '.') {
+        return {
+            { TokenType::Error, "", 0, 0, std::vector<Token>() },
+            curLine, curCol, index, false
+        };
+    }
+    newCol++;
+    newInd++;
+    return {
+        { TokenType::Period, ".", newLine, newCol - 1, std::vector<Token>() },
+        newLine, newCol, newInd, true
     };
 }
