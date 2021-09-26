@@ -33,10 +33,18 @@ VariablePointer listHelper(
             return std::make_shared<ListVariable>(std::vector<VariablePointer>({
                 self->toNumber()
             }));
-        case VariableType::String:
-            return std::make_shared<ListVariable>(std::vector<VariablePointer>({
+        case VariableType::String: {
+            std::vector<VariablePointer> charStrs;
+            const auto val = std::dynamic_pointer_cast<StringVariable>(
                 self->toString()
-            }));
+            )->value;
+            for(size_t i = 0; i < val.length(); i++) {
+                charStrs.push_back(std::make_shared<StringVariable>(
+                    "" + val[i]
+                ));
+            }
+            return std::make_shared<ListVariable>(charStrs);
+        }
         case VariableType::Tuple:
             return std::make_shared<ListVariable>(std::vector<VariablePointer>({
                 self->toTuple()

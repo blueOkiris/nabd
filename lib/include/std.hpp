@@ -30,3 +30,10 @@ inline VariablePointer parseNum(const VariablePointer &str) {
     const auto num = std::strtod(strData.c_str(), &end);
     return std::make_shared<NumberVariable>(num);
 }
+
+inline VariablePointer len(const VariablePointer &ls) {
+    const auto strData = std::dynamic_pointer_cast<ListVariable>(
+        ls->toList(std::vector<VariableType>({ VariableType::String }))
+    );
+    return std::make_shared<NumberVariable>(strData->values.size());
+}
