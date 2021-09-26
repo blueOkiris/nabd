@@ -4,7 +4,7 @@
 
 A simple, functional esoteric programming language.
 
-The name is an acronym standing for "Not A Brainf\*\*k Derivative"
+The name is an acronym standing for "Not A B.f. Derivative"
 
 ## Modules
 
