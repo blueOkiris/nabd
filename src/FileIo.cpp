@@ -24,6 +24,12 @@ nabd::InputArguments nabd::parseArguments(const int argc, const char **args) {
             i++;
         } else if(std::string(args[i]) == "-k") {
             result.link = true;
+        } else if(std::string(args[i]) == "-L" && i + 1 < argc) {
+            result.linkFolders.push_back(std::string(args[i + 1]));
+            i++;
+        } else if(std::string(args[i]) == "-l" && i + 1 < argc) {
+            result.libraryNames.push_back(std::string(args[i + 1]));
+            i++;
         } else {
             result.objects.push_back(std::string(args[i]));
         }

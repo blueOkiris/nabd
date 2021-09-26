@@ -15,6 +15,8 @@ namespace nabd {
         std::string fileName;
         std::vector<std::string> objects;
         std::vector<std::string> includeFolders;
+        std::vector<std::string> linkFolders;
+        std::vector<std::string> libraryNames;
         bool link;
     };
     InputArguments parseArguments(const int argc, const char **args);

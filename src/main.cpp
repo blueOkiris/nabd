@@ -179,7 +179,14 @@ void link(
     for(const auto &obj : cliInputs.objects) {
         linkCmd << obj << " ";
     }
-    linkCmd << modInfo.buildFolder << "/Variable.o";
+    linkCmd << modInfo.buildFolder << "/Variable.o ";
+    for(const auto &folder : cliInputs.linkFolders) {
+        linkCmd << "-L" << folder << " ";
+    }
+    linkCmd << "-L" << modInfo.buildFolder << " ";
+    for(const auto &lib : cliInputs.libraryNames) {
+        linkCmd << "-l" << lib << " ";
+    }
     std::cout << linkCmd.str() << std::endl;
     if(system(linkCmd.str().c_str()) != 0) {
         errorOut("Failed to link objects!");
