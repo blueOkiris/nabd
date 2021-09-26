@@ -217,9 +217,11 @@ std::string codegen::generateExprCode(const Token &expr) {
                 + generateExprCode(subExpr.children[2]) + ")";
         
         case TokenType::Ternary:
-            return generateExprCode(subExpr.children[1])
-                + " ? " + generateExprCode(subExpr.children[3])
-                + " : " + generateExprCode(subExpr.children[5]);
+            return "std::dynamic_pointer_cast<NumberVariable>("
+                + generateExprCode(subExpr.children[1])
+                + "->toNumber())->value > 0 ? "
+                + generateExprCode(subExpr.children[3]) + " : "
+                + generateExprCode(subExpr.children[5]);
         
         case TokenType::String:
             return "std::make_shared<StringVariable>(\""
