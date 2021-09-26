@@ -40,15 +40,15 @@ endif
 .PHONY : clean
 clean:
 ifeq ($(OS),Windows_NT)
-	cmd /k "rmdir /s /q $(BUILDFLDR) & exit"
-	cmd /k "rmdir /s /q $(OBJFLDR) & exit"
+	-cmd /k "rmdir /s /q $(BUILDFLDR) & exit"
+	-cmd /k "rmdir /s /q $(OBJFLDR) & exit"
 
-	cmd /k "rmdir /s /q examples\\TruthMachine\\infLoop_nabdout & exit"
-	cmd /k "rmdir /s /q examples\\TruthMachine\\main_nabdout & exit"
-	cmd /k "rmdir /s /q examples\\TruthMachine\\TruthMachine_nabdout & exit"
-	cmd /k "del examples\\TruthMachine\\infLoop.o & exit"
-	cmd /k "del examples\\TruthMachine\\main.o & exit"
-	cmd /k "del examples\\TruthMachine\\TruthMachine.exe & exit"
+	-cmd /k "rmdir /s /q examples\\TruthMachine\\infLoop_nabdout & exit"
+	-cmd /k "rmdir /s /q examples\\TruthMachine\\main_nabdout & exit"
+	-cmd /k "rmdir /s /q examples\\TruthMachine\\TruthMachine_nabdout & exit"
+	-cmd /k "del examples\\TruthMachine\\infLoop.o & exit"
+	-cmd /k "del examples\\TruthMachine\\main.o & exit"
+	-cmd /k "del examples\\TruthMachine\\TruthMachine.exe & exit"
 else
 	rm -rf $(BUILDFLDR)
 	rm -rf $(OBJFLDR)
