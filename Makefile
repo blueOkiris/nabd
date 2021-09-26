@@ -17,7 +17,8 @@ OBJS :=				$(addprefix $(OBJFLDR)/$(OBJNAME)/,$(subst .cpp,.o,$(foreach file,$(S
 
 ## Test settings
 TEST_OBJNAMES :=	HelloWorldTest \
-					TruthMachineTest
+					TruthMachineTest \
+					StdTest
 LIB_SRC :=			$(wildcard lib/src/*.cpp)
 LIB_HFILES :=		$(wildcard lib/include/*.hpp)
 LIB_OBJS :=			$(addprefix $(OBJFLDR)/lib/,$(subst .cpp,.o,$(foreach file,$(LIB_SRC),$(notdir $(file)))))

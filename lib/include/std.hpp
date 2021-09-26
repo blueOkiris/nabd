@@ -18,7 +18,7 @@ inline VariablePointer print(const VariablePointer &msg) {
 
 inline VariablePointer input(const VariablePointer &dummy) {
     std::string str;
-    std::cin >> str;
+    std::getline(std::cin, str);
     return std::make_shared<StringVariable>(str);
 }
 
