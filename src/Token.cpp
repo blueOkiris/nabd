@@ -50,7 +50,7 @@ const std::map<nabd::TokenType, std::string> g_typeStr = {
 
 std::string Token::str(const uint32_t padding) const {
     std::stringstream tokStr;
-    padStringStream(tokStr, padding);
+    padStringStream(tokStr, padding, '|');
     tokStr << "Tok w/ tp '";
     tokStr << g_typeStr.at(type);
     if(value != "") {

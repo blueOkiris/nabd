@@ -893,6 +893,7 @@ parser::ParserResult parser::parseTupDef(
         type1.result,
         typeOp1.result,
         expr1.result,
+        comma.result,
         type2.result,
         typeOp2.result,
         expr2.result,

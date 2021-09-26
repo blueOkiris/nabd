@@ -237,12 +237,20 @@ std::string codegen::generateExprCode(const Token &expr) {
                 + subExpr.value + "))";
         
         case TokenType::TupDef:
-            // TODO!
-            break;
-        
-        case TokenType::ListDef:
-            // TODO!
-            break;
+            return "std::make_shared<TupleVariable>("
+                "std::make_pair<VariablePointer, VariablePointer>("
+                + generateExprCode(subExpr.children[3]) + ", "
+                + generateExprCode(subExpr.children[7]) + "))";
+
+        case TokenType::ListDef: {
+            std::stringstream subVarLs;
+            for(size_t i = 3; i < subExpr.children.size() - 1; i += 2) {
+                subVarLs << generateExprCode(subExpr.children[i]) + ", ";
+            }
+            return "std::make_shared<ListVariable>("
+                "std::vector<VariablePointer>({ "
+                + subVarLs.str() + " }))";
+        }
         
         case TokenType::Identifier:
             return subExpr.value;

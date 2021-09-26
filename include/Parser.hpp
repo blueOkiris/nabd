@@ -19,6 +19,7 @@
  * <ternary> ::=        <exclam> <expr> <q-mark> <expr> <colon> <expr>
  * 
  * <list-def> ::=       <lbrak> <type> <type-op> { <exp> { <comma> <expr> } }
+ *                      <rbrak>
  * <tup-def> ::=        <lcurl> <type> <type-op> <expr> <comma>
  *                      <type> <type-op> <expr> <rcurl>
  * 
