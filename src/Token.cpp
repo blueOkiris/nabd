@@ -12,7 +12,7 @@
 
 using namespace nabd;
 
-const std::map<TokenType, std::string> g_typeStr = {
+const std::map<nabd::TokenType, std::string> g_typeStr = {
     { TokenType::Program,       "Program" },
     { TokenType::Include,       "Include" },
     { TokenType::FuncDef,       "FuncDef" },

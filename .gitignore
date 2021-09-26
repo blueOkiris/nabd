@@ -1,3 +1,5 @@
 .vscode/
 build/
 *.o
+*_nabdout
+*.exe

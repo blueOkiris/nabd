@@ -10,8 +10,6 @@
 #include <memory>
 #include <Variable.hpp>
 
-using namespace nabd;
-
 #include <std.hpp> // $std$
 
 VariablePointer fake_main(const VariablePointer &args); // main = args > ...

@@ -1,0 +1,6 @@
+$std$
+$infLoop$
+
+main = args >
+    i1InfI0Stop(
+        parseNum(input(0d0#))).

@@ -5,6 +5,19 @@
 
 #pragma once
 
+// For the directory creation, directory exists, and full path
+#if defined(_WIN32) || defined(WIN32)
+#include <io.h>
+#include <windows.h>
+#include <direct.h>
+#define GetCurrentDir _getcwd
+#else
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#define GetCurrentDir getcwd
+#endif
+
 #include <sstream>
 #include <fstream>
 #include <string>
@@ -58,5 +71,30 @@ namespace nabd {
             }
             index++;
         }
+    }
+
+    inline bool dirExists(const std::string &name) {
+#if defined(_WIN32) || defined(WIN32)
+        const auto fileType = GetFileAttributesA(name.c_str());
+        return fileType != INVALID_FILE_ATTRIBUTES
+            && fileType & FILE_ATTRIBUTE_DIRECTORY;
+#else
+        struct stat st = { 0 };
+        return stat(name.c_str(), &st) != -1;
+#endif
+    }
+
+    inline bool createDirectory(const std::string &name) {
+#if defined(_WIN32) || defined(WIN32)
+        return mkdir(name.c_str()) == 0;
+#else
+        return mkdir(name.c_str(), 0700) == 0;
+#endif
+    }
+
+    inline std::string getCurrentDir(void) {
+        char buff[FILENAME_MAX];
+        GetCurrentDir(buff, FILENAME_MAX);
+        return std::string(buff);
     }
 }

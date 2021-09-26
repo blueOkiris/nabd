@@ -15,8 +15,6 @@
 #include <memory>
 #include <Variable.hpp>
 
-using namespace nabd;
-
 #include <std.hpp> // $std$
 
 VariablePointer i1InfI0Stop(const VariablePointer &loop); // i1InfI0Stop = loop > ...

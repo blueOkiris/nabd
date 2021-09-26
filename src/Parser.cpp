@@ -519,7 +519,7 @@ parser::ParserResult parser::parseTernary(
     });
 
     return {
-        { TokenType::FuncCall, "", 0, 0, subTokens },
+        { TokenType::Ternary, "", 0, 0, subTokens },
         newLine, newCol, newInd, true
     };
 }

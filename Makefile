@@ -23,15 +23,18 @@ LIB_HFILES :=		$(wildcard lib/include/*.hpp)
 LIB_OBJS :=			$(addprefix $(OBJFLDR)/lib/,$(subst .cpp,.o,$(foreach file,$(LIB_SRC),$(notdir $(file)))))
 LIB_INC :=			-Ilib/include
 
+## Examples
+EX_OBJNAMES :=		TruthMachine
+
 # Targets
 
 ## Helper Targets
 
 .PHONY : all
 ifeq ($(OS),Windows_NT)
-all : $(BUILDFLDR)\\$(OBJNAME) tests
+all : $(BUILDFLDR)\\$(OBJNAME) tests examples
 else
-all : $(BUILDFLDR)/$(OBJNAME) tests
+all : $(BUILDFLDR)/$(OBJNAME) tests examples
 endif
 
 .PHONY : clean
@@ -39,9 +42,20 @@ clean:
 ifeq ($(OS),Windows_NT)
 	cmd /k "rmdir /s /q $(BUILDFLDR) & exit"
 	cmd /k "rmdir /s /q $(OBJFLDR) & exit"
+
+	cmd /k "rmdir /s /q examples\\TruthMachine\\infLoop_nabdout & exit"
+	cmd /k "rmdir /s /q examples\\TruthMachine\\main_nabdout & exit"
+	cmd /k "rmdir /s /q examples\\TruthMachine\\TruthMachine_nabdout & exit"
+	cmd /k "del examples\\TruthMachine\\infLoop.o & exit"
+	cmd /k "del examples\\TruthMachine\\main.o & exit"
+	cmd /k "del examples\\TruthMachine\\TruthMachine.exe & exit"
 else
 	rm -rf $(BUILDFLDR)
 	rm -rf $(OBJFLDR)
+
+	rm -rf examples/TruthMachine/*_nabdout
+	rm -rf examples/TruthMachine/*.o
+	rm -rf examples/TruthMachine/TruthMachine
 endif
 
 ifeq ($(OS),Windows_NT)
@@ -78,10 +92,11 @@ endif
 
 ifeq ($(OS),Windows_NT)
 $(BUILDFLDR)\\$(OBJNAME) : $(subst /,\\,$(OBJS))
+	-mkdir $(BUILDFLDR)
 else
 $(BUILDFLDR)/$(OBJNAME) : $(OBJS)
+	mkdir -p $(BUILDFLDR)
 endif
-	-mkdir $(BUILDFLDR)
 	$(LD) -o $@ $^ $(LDFLAGS)
 
 .PHONY : tests
@@ -89,6 +104,13 @@ ifeq ($(OS),Windows_NT)
 tests : $(addprefix $(BUILDFLDR)\\,$(TEST_OBJNAMES))
 else
 tests : $(addprefix $(BUILDFLDR)/,$(TEST_OBJNAMES))
+endif
+
+.PHONY : examples
+ifeq ($(OS),Windows_NT)
+examples : examples\\TruthMachine\\TruthMachine.exe
+else
+examples : examples/TruthMachine/TruthMachine
 endif
 
 ifeq ($(OS),Windows_NT)
@@ -106,3 +128,11 @@ $(BUILDFLDR)/$(1) : $(LIB_OBJS) $(OBJFLDR)/tests/$(1).o
 endef
 endif
 $(foreach test,$(TEST_OBJNAMES),$(eval $(call test_targets,$(test))))
+
+ifeq ($(OS),Windows_NT)
+examples\\TruthMachine\\TruthMachine.exe : $(BUILDFLDR)\\$(OBJNAME)
+	mingw32-make -C examples\\TruthMachine
+else
+examples/TruthMachine/TruthMachine : $(BUILDFLDR)/$(OBJNAME)
+	make -C examples\\TruthMachine
+endif

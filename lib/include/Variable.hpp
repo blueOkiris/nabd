@@ -22,77 +22,71 @@
 #include <vector>
 #include <memory>
 
-namespace nabd {
-    // Interface for all variables to be convertable to eachother
-    enum class VariableType {
-        String, Number,
-        List, Tuple
-    };
-    struct Variable {
-        virtual std::shared_ptr<Variable> toString(void) const = 0;
-        virtual std::shared_ptr<Variable> toNumber(void) const = 0;
-        virtual std::shared_ptr<Variable> toList(
-            const std::vector<VariableType> &subTypes
-        ) const = 0;
-        virtual std::shared_ptr<Variable> toTuple(void) const = 0;
-    };
-    typedef std::shared_ptr<Variable> VariablePointer;
+// Interface for all variables to be convertable to eachother
+enum class VariableType {
+    String, Number,
+    List, Tuple
+};
+struct Variable {
+    virtual std::shared_ptr<Variable> toString(void) const = 0;
+    virtual std::shared_ptr<Variable> toNumber(void) const = 0;
+    virtual std::shared_ptr<Variable> toList(
+        const std::vector<VariableType> &subTypes
+    ) const = 0;
+    virtual std::shared_ptr<Variable> toTuple(void) const = 0;
+};
+typedef std::shared_ptr<Variable> VariablePointer;
 
-    struct StringVariable : public Variable {
-        public:
-            StringVariable(const std::string &data);
-            
-            VariablePointer toString(void) const override;
-            VariablePointer toNumber(void) const override;
-            VariablePointer toList(
-                const std::vector<VariableType> &subTypes
-            ) const override;
-            VariablePointer toTuple(void) const override;
-            
-            const std::string value;
-    };
+struct StringVariable : public Variable {
+    StringVariable(const std::string &data);
+    
+    VariablePointer toString(void) const override;
+    VariablePointer toNumber(void) const override;
+    VariablePointer toList(
+        const std::vector<VariableType> &subTypes
+    ) const override;
+    VariablePointer toTuple(void) const override;
+    
+    const std::string value;
+};
 
-    struct NumberVariable : public Variable {
-        public:
-            NumberVariable(const double data);
-            
-            VariablePointer toString(void) const override;
-            VariablePointer toNumber(void) const override;
-            VariablePointer toList(
-                const std::vector<VariableType> &subTypes
-            ) const override;
-            VariablePointer toTuple(void) const override;
-            
-            const double value;
-    };
+struct NumberVariable : public Variable {
+    NumberVariable(const double data);
+    
+    VariablePointer toString(void) const override;
+    VariablePointer toNumber(void) const override;
+    VariablePointer toList(
+        const std::vector<VariableType> &subTypes
+    ) const override;
+    VariablePointer toTuple(void) const override;
+    
+    const double value;
+};
 
-    struct ListVariable : public Variable {
-        public:
-            ListVariable(const std::vector<VariablePointer> &data);
-            
-            VariablePointer toString(void) const override;
-            VariablePointer toNumber(void) const override;
-            VariablePointer toList(
-                const std::vector<VariableType> &subTypes
-            ) const override;
-            VariablePointer toTuple(void) const override;
-            
-            const std::vector<VariablePointer> values;
-    };
+struct ListVariable : public Variable {
+    ListVariable(const std::vector<VariablePointer> &data);
+    
+    VariablePointer toString(void) const override;
+    VariablePointer toNumber(void) const override;
+    VariablePointer toList(
+        const std::vector<VariableType> &subTypes
+    ) const override;
+    VariablePointer toTuple(void) const override;
+    
+    const std::vector<VariablePointer> values;
+};
 
-    struct TupleVariable : public Variable {
-        public:
-            TupleVariable(
-                const std::pair<VariablePointer, VariablePointer> &data
-            );
-            
-            VariablePointer toString(void) const override;
-            VariablePointer toNumber(void) const override;
-            VariablePointer toList(
-                const std::vector<VariableType> &subTypes
-            ) const override;
-            VariablePointer toTuple(void) const override;
-            
-            const std::pair<VariablePointer, VariablePointer> values;
-    };
-}
+struct TupleVariable : public Variable {
+    TupleVariable(
+        const std::pair<VariablePointer, VariablePointer> &data
+    );
+    
+    VariablePointer toString(void) const override;
+    VariablePointer toNumber(void) const override;
+    VariablePointer toList(
+        const std::vector<VariableType> &subTypes
+    ) const override;
+    VariablePointer toTuple(void) const override;
+    
+    const std::pair<VariablePointer, VariablePointer> values;
+};

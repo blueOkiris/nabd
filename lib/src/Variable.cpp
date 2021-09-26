@@ -12,8 +12,6 @@
 #include <memory>
 #include <Variable.hpp>
 
-using namespace nabd;
-
 // All of them use a similar toList, so this is code reuse
 VariablePointer listHelper(
         VariablePointer self, const std::vector<VariableType> &subTypes) {
