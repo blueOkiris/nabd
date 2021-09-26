@@ -94,7 +94,14 @@ namespace nabd {
 
     inline std::string getCurrentDir(void) {
         char buff[FILENAME_MAX];
+#if defined(_WIN32) || defined(WIN32)
         GetCurrentDir(buff, FILENAME_MAX);
+#else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-result"
+        GetCurrentDir(buff, FILENAME_MAX);
+#pragma GCC diagnostic pop
+#endif
         return std::string(buff);
     }
 }

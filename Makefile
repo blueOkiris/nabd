@@ -134,5 +134,5 @@ examples\\TruthMachine\\TruthMachine.exe : $(BUILDFLDR)\\$(OBJNAME)
 	mingw32-make -C examples\\TruthMachine
 else
 examples/TruthMachine/TruthMachine : $(BUILDFLDR)/$(OBJNAME)
-	make -C examples\\TruthMachine
+	make -C examples/TruthMachine
 endif

@@ -111,7 +111,7 @@ void buildObj(
         "cp "
 #endif
         + modInfo.buildFolder + "/" + modInfo.moduleName + ".o "
-        + modInfo.relativeDirectory
+        + (modInfo.relativeDirectory == "" ? "." : modInfo.relativeDirectory)
 #if defined(_WIN32) || defined(WIN32)
         + "\"";
 #else
@@ -201,9 +201,12 @@ void link(
 #endif
         + modInfo.buildFolder + "/" + modInfo.moduleName
 #if defined(_WIN32) || defined(WIN32)
-        + ".exe " + modInfo.relativeDirectory + "\"";
+        + ".exe "
+        + (modInfo.relativeDirectory == "" ? "." : modInfo.relativeDirectory)
+        + "\"";
 #else
-        + " " + modInfo.relativeDirectory;
+        + " "
+        + (modInfo.relativeDirectory == "" ? "." : modInfo.relativeDirectory);
 #endif
     std::cout << copyCmd << std::endl;
     if(system(copyCmd.c_str()) != 0) {
