@@ -37,3 +37,81 @@ inline VariablePointer len(const VariablePointer &ls) {
     );
     return std::make_shared<NumberVariable>(strData->values.size());
 }
+
+inline VariablePointer gt(const VariablePointer &tup) {
+    const auto items = std::dynamic_pointer_cast<TupleVariable>(
+        tup->toTuple()
+    )->values;
+    const auto num1 = std::dynamic_pointer_cast<NumberVariable>(
+        items.first->toNumber()
+    )->value;
+    const auto num2 = std::dynamic_pointer_cast<NumberVariable>(
+        items.second->toNumber()
+    )->value;
+    return std::make_shared<NumberVariable>(num1 > num2 ? 1 : -1);
+}
+
+inline VariablePointer lt(const VariablePointer &tup) {
+    const auto items = std::dynamic_pointer_cast<TupleVariable>(
+        tup->toTuple()
+    )->values;
+    const auto num1 = std::dynamic_pointer_cast<NumberVariable>(
+        items.first->toNumber()
+    )->value;
+    const auto num2 = std::dynamic_pointer_cast<NumberVariable>(
+        items.second->toNumber()
+    )->value;
+    return std::make_shared<NumberVariable>(num1 < num2 ? 1 : -1);
+}
+
+inline VariablePointer eq(const VariablePointer &tup) {
+    const auto items = std::dynamic_pointer_cast<TupleVariable>(
+        tup->toTuple()
+    )->values;
+    const auto num1 = std::dynamic_pointer_cast<NumberVariable>(
+        items.first->toNumber()
+    )->value;
+    const auto num2 = std::dynamic_pointer_cast<NumberVariable>(
+        items.second->toNumber()
+    )->value;
+    return std::make_shared<NumberVariable>(num1 == num2 ? 1 : -1);
+}
+
+inline VariablePointer gte(const VariablePointer &tup) {
+    const auto items = std::dynamic_pointer_cast<TupleVariable>(
+        tup->toTuple()
+    )->values;
+    const auto num1 = std::dynamic_pointer_cast<NumberVariable>(
+        items.first->toNumber()
+    )->value;
+    const auto num2 = std::dynamic_pointer_cast<NumberVariable>(
+        items.second->toNumber()
+    )->value;
+    return std::make_shared<NumberVariable>(num1 >= num2 ? 1 : -1);
+}
+
+inline VariablePointer lte(const VariablePointer &tup) {
+    const auto items = std::dynamic_pointer_cast<TupleVariable>(
+        tup->toTuple()
+    )->values;
+    const auto num1 = std::dynamic_pointer_cast<NumberVariable>(
+        items.first->toNumber()
+    )->value;
+    const auto num2 = std::dynamic_pointer_cast<NumberVariable>(
+        items.second->toNumber()
+    )->value;
+    return std::make_shared<NumberVariable>(num1 <= num2 ? 1 : -1);
+}
+
+inline VariablePointer ne(const VariablePointer &tup) {
+    const auto items = std::dynamic_pointer_cast<TupleVariable>(
+        tup->toTuple()
+    )->values;
+    const auto num1 = std::dynamic_pointer_cast<NumberVariable>(
+        items.first->toNumber()
+    )->value;
+    const auto num2 = std::dynamic_pointer_cast<NumberVariable>(
+        items.second->toNumber()
+    )->value;
+    return std::make_shared<NumberVariable>(num1 != num2 ? 1 : -1);
+}

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <utility>
 #include <Variable.hpp>
 #include <std.hpp>
 
@@ -13,6 +14,12 @@ void testPrint(void);
 void testInput(void);
 void testParseNum(void);
 void testLen(void);
+void testGt(void);
+void testLt(void);
+void testEq(void);
+void testGte(void);
+void testLte(void);
+void testNe(void);
 
 int main(const int argc, const char **args) {
     for(int i = 1; i < argc; i++) {
@@ -28,8 +35,286 @@ int main(const int argc, const char **args) {
             testParseNum();
         } else if(std::string(args[i]) == "len") {
             testLen();
+        } else if(std::string(args[i]) == "gt") {
+            testGt();
+        } else if(std::string(args[i]) == "lt") {
+            testLt();
+        } else if(std::string(args[i]) == "eq") {
+            testEq();
+        } else if(std::string(args[i]) == "gte") {
+            testGte();
+        } else if(std::string(args[i]) == "lte") {
+            testLte();
+        } else if(std::string(args[i]) == "ne") {
+            testNe();
         }
     }
+}
+
+void testNe(void) {
+    std::cout << "Testing std.hpp:ne." << std::endl;
+
+    const auto num1 = std::make_shared<NumberVariable>(10.0);
+    const auto num2 = std::make_shared<NumberVariable>(10.1);
+    const auto tup1 = std::make_shared<TupleVariable>(std::make_pair(
+        num1, num2
+    ));
+    std::cout
+        << "Created tuple of numbers: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            tup1->toString()
+        )->value << "." << std::endl;
+    
+    const auto neVal1 = ne(tup1);
+    std::cout
+        << "Expected result is 1. Actual: "
+        << std::dynamic_pointer_cast<NumberVariable>(
+            neVal1->toNumber()
+        )->value << "." << std::endl;
+    
+    const auto tup2 = std::make_shared<TupleVariable>(std::make_pair(
+        num1, num1
+    ));
+    std::cout
+        << "Created new tuple of numbers: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            tup2->toString()
+        )->value << "." << std::endl;
+    
+    const auto neVal2 = ne(tup2);
+    std::cout
+        << "Expected result is -1. Actual: "
+        << std::dynamic_pointer_cast<NumberVariable>(
+            neVal2->toNumber()
+        )->value << "." << std::endl
+        << "Test completed." << std::endl;
+}
+
+void testLte(void) {
+    std::cout << "Testing std.hpp:lte." << std::endl;
+
+    const auto num1 = std::make_shared<NumberVariable>(10.0);
+    const auto num2 = std::make_shared<NumberVariable>(10.1);
+    const auto tup1 = std::make_shared<TupleVariable>(std::make_pair(
+        num1, num2
+    ));
+    std::cout
+        << "Created tuple of numbers: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            tup1->toString()
+        )->value << "." << std::endl;
+    
+    const auto lteVal1 = lte(tup1);
+    std::cout
+        << "Expected result is 1. Actual: "
+        << std::dynamic_pointer_cast<NumberVariable>(
+            lteVal1->toNumber()
+        )->value << "." << std::endl;
+    
+    const auto tup2 = std::make_shared<TupleVariable>(std::make_pair(
+        num2, num1
+    ));
+    std::cout
+        << "Created new tuple of numbers: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            tup2->toString()
+        )->value << "." << std::endl;
+    
+    const auto lteVal2 = lte(tup2);
+    std::cout
+        << "Expected result is -1. Actual: "
+        << std::dynamic_pointer_cast<NumberVariable>(
+            lteVal2->toNumber()
+        )->value << "." << std::endl;
+    
+    const auto tup3 = std::make_shared<TupleVariable>(std::make_pair(
+        num1, num1
+    ));
+    std::cout
+        << "Created new tuple of numbers: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            tup3->toString()
+        )->value << "." << std::endl;
+    
+    const auto lteVal3 = lte(tup3);
+    std::cout
+        << "Expected result is 1. Actual: "
+        << std::dynamic_pointer_cast<NumberVariable>(
+            lteVal3->toNumber()
+        )->value << "." << std::endl
+        << "Test completed." << std::endl;
+}
+
+void testGte(void) {
+    std::cout << "Testing std.hpp:gte." << std::endl;
+
+    const auto num1 = std::make_shared<NumberVariable>(10.0);
+    const auto num2 = std::make_shared<NumberVariable>(10.1);
+    const auto tup1 = std::make_shared<TupleVariable>(std::make_pair(
+        num1, num2
+    ));
+    std::cout
+        << "Created tuple of numbers: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            tup1->toString()
+        )->value << "." << std::endl;
+    
+    const auto gteVal1 = gte(tup1);
+    std::cout
+        << "Expected result is -1. Actual: "
+        << std::dynamic_pointer_cast<NumberVariable>(
+            gteVal1->toNumber()
+        )->value << "." << std::endl;
+    
+    const auto tup2 = std::make_shared<TupleVariable>(std::make_pair(
+        num2, num1
+    ));
+    std::cout
+        << "Created new tuple of numbers: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            tup2->toString()
+        )->value << "." << std::endl;
+    
+    const auto gteVal2 = gte(tup2);
+    std::cout
+        << "Expected result is 1. Actual: "
+        << std::dynamic_pointer_cast<NumberVariable>(
+            gteVal2->toNumber()
+        )->value << "." << std::endl;
+    
+    const auto tup3 = std::make_shared<TupleVariable>(std::make_pair(
+        num1, num1
+    ));
+    std::cout
+        << "Created new tuple of numbers: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            tup3->toString()
+        )->value << "." << std::endl;
+    
+    const auto gteVal3 = gte(tup3);
+    std::cout
+        << "Expected result is 1. Actual: "
+        << std::dynamic_pointer_cast<NumberVariable>(
+            gteVal3->toNumber()
+        )->value << "." << std::endl
+        << "Test completed." << std::endl;
+}
+
+void testEq(void) {
+    std::cout << "Testing std.hpp:eq." << std::endl;
+
+    const auto num1 = std::make_shared<NumberVariable>(10.0);
+    const auto num2 = std::make_shared<NumberVariable>(10.1);
+    const auto tup1 = std::make_shared<TupleVariable>(std::make_pair(
+        num1, num2
+    ));
+    std::cout
+        << "Created tuple of numbers: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            tup1->toString()
+        )->value << "." << std::endl;
+    
+    const auto eqVal1 = eq(tup1);
+    std::cout
+        << "Expected result is -1. Actual: "
+        << std::dynamic_pointer_cast<NumberVariable>(
+            eqVal1->toNumber()
+        )->value << "." << std::endl;
+    
+    const auto tup2 = std::make_shared<TupleVariable>(std::make_pair(
+        num1, num1
+    ));
+    std::cout
+        << "Created new tuple of numbers: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            tup2->toString()
+        )->value << "." << std::endl;
+    
+    const auto eqVal2 = eq(tup2);
+    std::cout
+        << "Expected result is 1. Actual: "
+        << std::dynamic_pointer_cast<NumberVariable>(
+            eqVal2->toNumber()
+        )->value << "." << std::endl
+        << "Test completed." << std::endl;
+}
+
+void testLt(void) {
+    std::cout << "Testing std.hpp:lt." << std::endl;
+
+    const auto num1 = std::make_shared<NumberVariable>(10.0);
+    const auto num2 = std::make_shared<NumberVariable>(10.1);
+    const auto tup1 = std::make_shared<TupleVariable>(std::make_pair(
+        num1, num2
+    ));
+    std::cout
+        << "Created tuple of numbers: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            tup1->toString()
+        )->value << "." << std::endl;
+    
+    const auto ltVal1 = lt(tup1);
+    std::cout
+        << "Expected result is 1. Actual: "
+        << std::dynamic_pointer_cast<NumberVariable>(
+            ltVal1->toNumber()
+        )->value << "." << std::endl;
+    
+    const auto tup2 = std::make_shared<TupleVariable>(std::make_pair(
+        num2, num1
+    ));
+    std::cout
+        << "Created new tuple of numbers: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            tup2->toString()
+        )->value << "." << std::endl;
+    
+    const auto ltVal2 = lt(tup2);
+    std::cout
+        << "Expected result is -1. Actual: "
+        << std::dynamic_pointer_cast<NumberVariable>(
+            ltVal2->toNumber()
+        )->value << "." << std::endl
+        << "Test completed." << std::endl;
+}
+
+void testGt(void) {
+    std::cout << "Testing std.hpp:gt." << std::endl;
+
+    const auto num1 = std::make_shared<NumberVariable>(10.0);
+    const auto num2 = std::make_shared<NumberVariable>(10.1);
+    const auto tup1 = std::make_shared<TupleVariable>(std::make_pair(
+        num1, num2
+    ));
+    std::cout
+        << "Created tuple of numbers: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            tup1->toString()
+        )->value << "." << std::endl;
+    
+    const auto gtVal1 = gt(tup1);
+    std::cout
+        << "Expected result is -1. Actual: "
+        << std::dynamic_pointer_cast<NumberVariable>(
+            gtVal1->toNumber()
+        )->value << "." << std::endl;
+    
+    const auto tup2 = std::make_shared<TupleVariable>(std::make_pair(
+        num2, num1
+    ));
+    std::cout
+        << "Created new tuple of numbers: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            tup2->toString()
+        )->value << "." << std::endl;
+    
+    const auto gtVal2 = gt(tup2);
+    std::cout
+        << "Expected result is 1. Actual: "
+        << std::dynamic_pointer_cast<NumberVariable>(
+            gtVal2->toNumber()
+        )->value << "." << std::endl
+        << "Test completed." << std::endl;
 }
 
 void testLen(void) {
