@@ -184,3 +184,7 @@ inline VariablePointer ignore(const VariablePointer &param) {
     )->values;
     return pair.second;
 }
+
+inline VariablePointer dup(const VariablePointer &var) {
+    return std::make_shared<TupleVariable>(std::make_pair(var, var));
+}

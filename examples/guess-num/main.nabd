@@ -1,5 +1,3 @@
 $std$
 
-main = args >
-    ignore({ seedRandom(0x0#),
-        0x0# }).
+main = args > print('Hello, world!\n').
