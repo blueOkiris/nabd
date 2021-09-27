@@ -80,5 +80,12 @@ It will be increased overtime
  - `parseNum` - don't just cast to a number, but try to actually parse a number out
  - `seedRandom` - takes a dummy parameter and seeds a random given the current time. Returns 0
  - `random` - given a tuple with range min to max, return a random number
- - `ignore` - takes a tuple and returns the second. Can be used to emulate do syntax in Haskell
  - `dup` - duplicates an item and creates a tuple of the two
+ - `round` - returns input rounded to the nearest int
+ - `floor` - returns input rounded down
+ - `ceil` - returns input rounded up
+ - `fst` - get first item of tuple
+ - `snd` - get second item of tuple
+ - `elem` - get first element of tuple and then get the item of the second tuple item
+ - `inc` - increment a number
+ - `dec` - decrement a number

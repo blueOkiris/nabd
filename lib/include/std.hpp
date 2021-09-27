@@ -178,13 +178,73 @@ inline VariablePointer random(const VariablePointer &btwn) {
     return std::make_shared<NumberVariable>(num);
 }
 
-inline VariablePointer ignore(const VariablePointer &param) {
+inline VariablePointer dup(const VariablePointer &var) {
+    return std::make_shared<TupleVariable>(std::make_pair(var, var));
+}
+
+inline VariablePointer round(const VariablePointer &num) {
+    const auto value = std::dynamic_pointer_cast<NumberVariable>(
+        num->toNumber()
+    )->value;
+    return std::make_shared<NumberVariable>(std::round(value));
+}
+
+inline VariablePointer floor(const VariablePointer &num) {
+    const auto value = std::dynamic_pointer_cast<NumberVariable>(
+        num->toNumber()
+    )->value;
+    return std::make_shared<NumberVariable>(std::floor(value));
+}
+
+inline VariablePointer ceil(const VariablePointer &num) {
+    const auto value = std::dynamic_pointer_cast<NumberVariable>(
+        num->toNumber()
+    )->value;
+    return std::make_shared<NumberVariable>(std::ceil(value));
+}
+
+inline VariablePointer fst(const VariablePointer &param) {
+    const auto pair = std::dynamic_pointer_cast<TupleVariable>(
+        param->toTuple()
+    )->values;
+    return pair.first;
+}
+
+inline VariablePointer snd(const VariablePointer &param) {
     const auto pair = std::dynamic_pointer_cast<TupleVariable>(
         param->toTuple()
     )->values;
     return pair.second;
 }
 
-inline VariablePointer dup(const VariablePointer &var) {
-    return std::make_shared<TupleVariable>(std::make_pair(var, var));
+inline VariablePointer elem(const VariablePointer &param) {
+    const auto pair = std::dynamic_pointer_cast<TupleVariable>(
+        param->toTuple()
+    )->values;
+    const auto list = std::dynamic_pointer_cast<ListVariable>(
+        pair.second->toList(std::vector<VariableType>({ VariableType::Tuple }))
+    )->values;
+    const auto ind = std::dynamic_pointer_cast<NumberVariable>(
+        pair.first->toNumber()
+    )->value;
+
+    if(ind >= list.size()) {
+        return param;
+    }
+
+    return list[ind];
+}
+
+inline VariablePointer inc(const VariablePointer &numVar) {
+    const auto num = std::dynamic_pointer_cast<NumberVariable>(
+        numVar->toNumber()
+    )->value;
+    return std::make_shared<NumberVariable>(num + 1);
+}
+
+inline VariablePointer dec(const VariablePointer &numVar) {
+    const auto num = std::dynamic_pointer_cast<NumberVariable>(
+        numVar->toNumber()
+    )->value;
+    return std::make_shared<NumberVariable>(num - 1);
 }

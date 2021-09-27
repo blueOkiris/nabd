@@ -2,7 +2,7 @@
 
 ## Compiler options
 CPPC :=				g++
-CPPFLAGS :=			-Wall -Werror -O2 -std=c++17
+CPPFLAGS :=			-Wall -Werror -g -std=c++17
 LD :=				g++
 LDFLAGS :=			-lm
 BUILDFLDR :=		build
