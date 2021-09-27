@@ -4,7 +4,7 @@
 CPPC :=				g++
 CPPFLAGS :=			-Wall -Werror -O2 -std=c++17
 LD :=				g++
-LDFLAGS :=		
+LDFLAGS :=			-lm
 BUILDFLDR :=		build
 OBJFLDR :=			obj
 

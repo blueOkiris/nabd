@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <cmath>
 #include <Variable.hpp>
 
 inline VariablePointer print(const VariablePointer &msg) {
@@ -33,7 +34,7 @@ inline VariablePointer parseNum(const VariablePointer &str) {
 
 inline VariablePointer len(const VariablePointer &ls) {
     const auto strData = std::dynamic_pointer_cast<ListVariable>(
-        ls->toList(std::vector<VariableType>({ VariableType::String }))
+        ls->toList(std::vector<VariableType>({ VariableType::Tuple }))
     );
     return std::make_shared<NumberVariable>(strData->values.size());
 }
@@ -116,20 +117,36 @@ inline VariablePointer ne(const VariablePointer &tup) {
     return std::make_shared<NumberVariable>(num1 != num2 ? 1 : -1);
 }
 
-inline VariablePointer swap(const VariablePointer &ls) {
-    const auto data = std::dynamic_pointer_cast<ListVariable>(
-        ls->toList(std::vector<VariableType>({ VariableType::String }))
+inline VariablePointer swap(const VariablePointer &param) {
+    const auto paramItems = std::dynamic_pointer_cast<ListVariable>(
+        param
     )->values;
-    if(data.size() < 1) {
-        return ls;
-    } else if(data.size() < 2) {
-        return data[0];
+    
+    if(paramItems.size() < 2) {
+        return param;
+    }
+    if(paramItems.size() < 3) {
+        return paramItems[1];
+    }
+
+    const auto ind = std::dynamic_pointer_cast<NumberVariable>(
+        paramItems[0]->toNumber()
+    )->value;
+    const auto baseList = std::dynamic_pointer_cast<ListVariable>(
+        paramItems[1]->toList({ VariableType::Tuple })
+    )->values;
+
+    if(baseList.size() < ind) {
+        return paramItems[1];
     } else {
         std::vector<VariablePointer> newData;
-        newData.push_back(data[1]);
-        newData.push_back(data[0]);
-        for(size_t i = 2; i < data.size(); i++) {
-            newData.push_back(data[i]);
+        for(size_t i = 0; i < baseList.size(); i++) {
+            if(i == static_cast<size_t>(std::floor(ind))) {
+                newData.push_back(paramItems[2]);
+                continue;
+            }
+
+            newData.push_back(baseList[i]);
         }
         return std::make_shared<ListVariable>(newData);
     }

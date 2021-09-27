@@ -58,8 +58,8 @@ void testSwap(void) {
     std::cout << "Testing std.hpp:swap." << std::endl;
 
     const std::vector<VariablePointer> nums({
-        std::make_shared<NumberVariable>(2),
         std::make_shared<NumberVariable>(1),
+        std::make_shared<NumberVariable>(2),
         std::make_shared<NumberVariable>(3),
         std::make_shared<NumberVariable>(4),
         std::make_shared<NumberVariable>(5)
@@ -81,9 +81,26 @@ void testSwap(void) {
             baseList->toString()
         )->value << std::endl;
     
-    const auto swappedList = swap(baseList);
+    const auto ind = std::make_shared<NumberVariable>(3);
+    std::cout << "Created index variable: " << ind->value << std::endl;
+
+    const auto swapItem = std::make_shared<NumberVariable>(10.923);
+    std::cout << "Created item to swap in: " << ind->value << std::endl;
+
+    const auto paramList = std::make_shared<ListVariable>(
+        std::vector<VariablePointer>({
+            ind, baseList, swapItem
+        })
+    );
     std::cout
-        << "Swapped first two numbers: "
+        << "Created parameter list for swap: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            paramList->toString()
+        )->value << std::endl;
+    
+    const auto swappedList = swap(paramList);
+    std::cout
+        << "Swapped base list[index] with swap item: "
         << std::dynamic_pointer_cast<StringVariable>(
             swappedList->toString()
         )->value << std::endl
