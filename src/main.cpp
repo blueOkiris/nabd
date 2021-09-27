@@ -187,6 +187,7 @@ void link(
     for(const auto &lib : cliInputs.libraryNames) {
         linkCmd << "-l" << lib << " ";
     }
+    linkCmd << "-lm";
     std::cout << linkCmd.str() << std::endl;
     if(system(linkCmd.str().c_str()) != 0) {
         errorOut("Failed to link objects!");

@@ -21,6 +21,9 @@ void testGte(void);
 void testLte(void);
 void testNe(void);
 void testSwap(void);
+void testSeedRandom(void);
+void testRandom(void);
+void testIgnore(void);
 
 int main(const int argc, const char **args) {
     for(int i = 1; i < argc; i++) {
@@ -50,8 +53,99 @@ int main(const int argc, const char **args) {
             testNe();
         } else if(std::string(args[i]) == "swap") {
             testSwap();
+        } else if(std::string(args[i]) == "seedRandom") {
+            testSeedRandom();
+        } else if(std::string(args[i]) == "random") {
+            testRandom();
+        } else if(std::string(args[i]) == "ignore") {
+            testIgnore();
         }
     }
+}
+
+void testIgnore(void) {
+    std::cout << "Testing std.hpp:ignore." << std::endl;
+
+    const auto dummy = std::make_shared<NumberVariable>(0);
+    std::cout << "Created dummy input: " << dummy->value << std::endl;
+
+    const auto seedRes = seedRandom(dummy);
+    std::cout
+        << "Result of seed: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            seedRes->toString()
+        )->value << std::endl;
+    
+    const auto bounds = std::make_shared<TupleVariable>(std::make_pair(
+        std::make_shared<NumberVariable>(-5),
+        std::make_shared<NumberVariable>(10)
+    ));
+    std::cout
+        << "Created bounds: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            bounds->toString()
+        )->value << std::endl;
+
+    const auto randNum = random(bounds);
+    std::cout
+        << "Generated random number: "
+        << std::dynamic_pointer_cast<NumberVariable>(
+            randNum->toNumber()
+        )->value << std::endl;
+
+    const auto pair = std::make_shared<TupleVariable>(std::make_pair(
+        seedRes, randNum
+    ));
+    std::cout
+        << "Paired results together: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            pair->toString()
+        )->value << std::endl;
+    
+    const auto secRes = ignore(pair);
+    std::cout
+        << "Result of ignore call: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            secRes->toString()
+        )->value << std::endl
+        << "Test completed." << std::endl;
+}
+
+void testRandom(void) {
+    std::cout << "Testing std.hpp:random." << std::endl;
+
+    const auto bounds = std::make_shared<TupleVariable>(std::make_pair(
+        std::make_shared<NumberVariable>(-5),
+        std::make_shared<NumberVariable>(10)
+    ));
+    std::cout
+        << "Created bounds: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            bounds->toString()
+        )->value << std::endl;
+
+    const auto randNum = random(bounds);
+    std::cout
+        << "Generated random number: "
+        << std::dynamic_pointer_cast<NumberVariable>(
+            randNum->toNumber()
+        )->value << std::endl
+        << "Test completed." << std::endl;
+}
+
+void testSeedRandom(void) {
+    std::cout << "Testing std.hpp:seedRandom." << std::endl;
+
+    const auto dummy = std::make_shared<NumberVariable>(0);
+    std::cout << "Created dummy input: " << dummy->value << std::endl;
+
+    const auto seedRes = seedRandom(dummy);
+    std::cout
+        << "Result of seed: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            seedRes->toString()
+        )->value << std::endl
+        << "Test completed." << std::endl;
 }
 
 void testSwap(void) {

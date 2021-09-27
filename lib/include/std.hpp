@@ -9,6 +9,9 @@
 #include <string>
 #include <memory>
 #include <cmath>
+#include <cstdio>
+#include <ctime>
+#include <cstdlib>
 #include <Variable.hpp>
 
 inline VariablePointer print(const VariablePointer &msg) {
@@ -136,7 +139,7 @@ inline VariablePointer swap(const VariablePointer &param) {
         paramItems[1]->toList({ VariableType::Tuple })
     )->values;
 
-    if(baseList.size() < ind) {
+    if(ind >= baseList.size()) {
         return paramItems[1];
     } else {
         std::vector<VariablePointer> newData;
@@ -150,4 +153,34 @@ inline VariablePointer swap(const VariablePointer &param) {
         }
         return std::make_shared<ListVariable>(newData);
     }
+}
+
+inline VariablePointer seedRandom(const VariablePointer &dummy) {
+    std::srand(std::time(NULL));
+    return std::make_shared<NumberVariable>(0);
+}
+
+inline VariablePointer random(const VariablePointer &btwn) {
+    const auto rangeVar = std::dynamic_pointer_cast<TupleVariable>(
+        btwn->toTuple()
+    )->values;
+    const auto min = std::dynamic_pointer_cast<NumberVariable>(
+        rangeVar.first->toNumber()
+    )->value;
+    const auto max = std::dynamic_pointer_cast<NumberVariable>(
+        rangeVar.second->toNumber()
+    )->value;
+
+    const auto range = max - min;
+    const auto div = static_cast<double>(RAND_MAX) / range;
+    const auto num = min + (static_cast<double>(rand()) / div);
+
+    return std::make_shared<NumberVariable>(num);
+}
+
+inline VariablePointer ignore(const VariablePointer &param) {
+    const auto pair = std::dynamic_pointer_cast<TupleVariable>(
+        param->toTuple()
+    )->values;
+    return pair.second;
 }

@@ -78,3 +78,6 @@ It will be increased overtime
  - `lse` - same as greater but with \<=
  - `ne` - same as greater but with !=
  - `parseNum` - don't just cast to a number, but try to actually parse a number out
+ - `seedRandom` - Takes a dummy parameter and seeds a random given the current time. Returns 0
+ - `random` - Given a tuple with range min to max, return a random number
+ - `ignore` - Takes a tuple and returns the second. Can be used to emulate do syntax in Haskell
