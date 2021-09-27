@@ -1009,6 +1009,7 @@ parser::ParserResult parser::parseListDef(
     newInd = rBrak.newInd;
     newLine = rBrak.newLine;
     newCol = rBrak.newCol;
+    subTokens.push_back(rBrak.result);
 
     return {
         { TokenType::ListDef, "", 0, 0, subTokens },

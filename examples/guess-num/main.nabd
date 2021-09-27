@@ -6,11 +6,13 @@ startGame = randNum > [
     print('The answer was '),
     print(randNum),
     print('\nEnter \'1\' to play again or \'0\' to quit: '),
-    ! input(0d0#) ? startGame(round(random({ 0d0#, 0d10# }))) : 0d0# ].
+    ! parseNum(input(0d0#)) ?
+        startGame(round(random({ 0d0#, 0d10# }))) :
+        0d0# ].
 
 guessFor = numAndAttempts > [
     print('Guess (integer): '),
-    checkGuess({ input(0d0#), numAndAttempts }) ].
+    checkGuess({ parseNum(input(0d0#)), numAndAttempts }) ].
 
 checkGuess = inputAndTupNumAtt >
     ! eq({
