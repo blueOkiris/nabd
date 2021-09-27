@@ -61,6 +61,55 @@ main = args >
         parseNum(input(0d0#))).
 ```
 
+__Guess the Number:__
+
+```
+$std$
+
+startGame = randNum > [
+    print('Guess a number btwn 0 and 10: '),
+    guessFor({ randNum, 0d2# }),
+    print('The answer was '),
+    print(randNum),
+    print('\nEnter \'1\' to play again or \'0\' to quit: '),
+    ! parseNum(input(0d0#)) ?
+        startGame(round(random({ 0d0#, 0d10# }))) :
+        0d0# ].
+
+guessFor = numAndAttempts > [
+    print('Guess (integer): '),
+    checkGuess({ parseNum(input(0d0#)), numAndAttempts }) ].
+
+checkGuess = inputAndTupNumAtt >
+    ! eq({
+        fst(inputAndTupNumAtt),
+        fst(snd(inputAndTupNumAtt)) 
+    }) ?
+        print('You won!\n') :
+        ! snd(snd(inputAndTupNumAtt)) ?
+            ! gt({
+                fst(inputAndTupNumAtt),
+                fst(snd(inputAndTupNumAtt))
+            }) ? [
+                print('Too high!\n'),
+                guessFor({
+                    fst(snd(inputAndTupNumAtt)),
+                    dec(snd(snd(inputAndTupNumAtt)))
+                }) ] : [
+                print('Too low!\n'),
+                guessFor({
+                    fst(snd(inputAndTupNumAtt)),
+                    dec(snd(snd(inputAndTupNumAtt)))
+                }) ] :
+            print('You lose!\n').
+
+main = args >
+    snd({[
+        seedRandom(0x0#),
+        print('Welcome to Guess the Number!\n'),
+        startGame(round(random({ 0d0#, 0d10# }))) ], 0d0# }).
+```
+
 ## Standard Library Functions
 
 These are built-in functionality to add a lot to the language.
