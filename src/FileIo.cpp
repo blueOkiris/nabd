@@ -79,7 +79,14 @@ std::string nabd::generateMakefile(
         const InputArguments &inputs, const ModuleInfo &modInfo) {
     std::stringstream inc;
     for(const auto &folder : inputs.includeFolders) {
-        inc << "\"-I" << getCurrentDir() << "/" << folder << "\" ";
+        if((folder.length() > 0 && folder[0] == '/')
+                || (folder.length() > 1 && folder[1] == ':')) {
+            // System folder, so just include
+            inc << "\"-I" << folder << "\" ";
+        } else {
+            // Add relative path to it
+            inc << "\"-I" << getCurrentDir() << "/" << folder << "\" ";
+        }
     }
     inc << "\"-I" << getCurrentDir() << "/" << modInfo.buildFolder << "\" ";
     

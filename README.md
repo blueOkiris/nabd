@@ -10,6 +10,10 @@ The name is an acronym standing for "Not A B.f. Derivative"
 
 Code is organized into modules and the module file directories can be passed into the compiler with `-I<folder name>` like headers in gcc.
 
+Afterwards, you may link the code with `nabc <output file name> -k <obj1> <obj2> ... -L<library search dir 1> -L<library search dir 2> ... -l <lib name 1> -l <lib name 2> ...` similar to gcc.
+
+If you want to include the path of the standard library and have installed it via the installer or package, I would recommend setting an environment variable like `NABC_HOME` to the install location of `std.hpp` (`C:\Program Files (x86)\BlueOkiris\nabc\` on Windows and `/`) and including it like this: `-I $env:NABC_HOME` on Windows or `-I $NABC_HOME` on Debian.
+
 Modules can either be nabd code *or* C++ headers with a corresponding object file (determined by file extension).
 
 For reference, look at the standard library implementation as that is a C++ library.
