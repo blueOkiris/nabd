@@ -1,0 +1,4 @@
+$std$
+
+main = args >
+    print('Hello, world!\n').

@@ -24,9 +24,6 @@ LIB_HFILES :=		$(wildcard lib/include/*.hpp)
 LIB_OBJS :=			$(addprefix $(OBJFLDR)/lib/,$(subst .cpp,.o,$(foreach file,$(LIB_SRC),$(notdir $(file)))))
 LIB_INC :=			-Ilib/include
 
-## Examples
-EX_OBJNAMES :=		TruthMachine
-
 # Targets
 
 ## Helper Targets
@@ -44,19 +41,28 @@ ifeq ($(OS),Windows_NT)
 	-cmd /k "rmdir /s /q $(BUILDFLDR) & exit"
 	-cmd /k "rmdir /s /q $(OBJFLDR) & exit"
 
-	-cmd /k "rmdir /s /q examples\\TruthMachine\\infLoop_nabdout & exit"
-	-cmd /k "rmdir /s /q examples\\TruthMachine\\main_nabdout & exit"
-	-cmd /k "rmdir /s /q examples\\TruthMachine\\TruthMachine_nabdout & exit"
-	-cmd /k "del examples\\TruthMachine\\infLoop.o & exit"
-	-cmd /k "del examples\\TruthMachine\\main.o & exit"
-	-cmd /k "del examples\\TruthMachine\\TruthMachine.exe & exit"
+	-cmd /k "rmdir /s /q examples\\truth-machine\\infLoop_nabdout & exit"
+	-cmd /k "rmdir /s /q examples\\truth-machine\\main_nabdout & exit"
+	-cmd /k "rmdir /s /q examples\\truth-machine\\TruthMachine_nabdout & exit"
+	-cmd /k "del examples\\truth-machine\\infLoop.o & exit"
+	-cmd /k "del examples\\truth-machine\\main.o & exit"
+	-cmd /k "del examples\\truth-machine\\TruthMachine.exe & exit"
+
+	-cmd /k "rmdir /s /q examples\\guess-num\\main_nabdout & exit"
+	-cmd /k "rmdir /s /q examples\\guess-num\\GuessTheNumber_nabdout & exit"
+	-cmd /k "del examples\\guess-num\\main.o & exit"
+	-cmd /k "del examples\\guess-num\\GuessTheNumber.exe & exit"
 else
 	rm -rf $(BUILDFLDR)
 	rm -rf $(OBJFLDR)
 
-	rm -rf examples/TruthMachine/*_nabdout
-	rm -rf examples/TruthMachine/*.o
-	rm -rf examples/TruthMachine/TruthMachine
+	rm -rf examples/truth-machine/*_nabdout
+	rm -rf examples/truth-machine/*.o
+	rm -rf examples/truth-machine/TruthMachine
+
+	rm -rf examples/guess-num/*_nabdout
+	rm -rf examples/guess-num/*.o
+	rm -rf examples/guess-num/GuessTheNumber
 endif
 
 ifeq ($(OS),Windows_NT)
@@ -109,9 +115,9 @@ endif
 
 .PHONY : examples
 ifeq ($(OS),Windows_NT)
-examples : examples\\TruthMachine\\TruthMachine.exe
+examples : examples\\truth-machine\\TruthMachine.exe examples\\guess-num\\GuessTheNumber.exe
 else
-examples : examples/TruthMachine/TruthMachine
+examples : examples/truth-machine/TruthMachine examples/guess-num/GuessTheNumber
 endif
 
 ifeq ($(OS),Windows_NT)
@@ -131,9 +137,17 @@ endif
 $(foreach test,$(TEST_OBJNAMES),$(eval $(call test_targets,$(test))))
 
 ifeq ($(OS),Windows_NT)
-examples\\TruthMachine\\TruthMachine.exe : $(BUILDFLDR)\\$(OBJNAME)
-	mingw32-make -C examples\\TruthMachine
+examples\\truth-machine\\TruthMachine.exe : $(BUILDFLDR)\\$(OBJNAME)
+	mingw32-make -C examples\\truth-machine
 else
-examples/TruthMachine/TruthMachine : $(BUILDFLDR)/$(OBJNAME)
-	make -C examples/TruthMachine
+examples/truth-machine/TruthMachine : $(BUILDFLDR)/$(OBJNAME)
+	make -C examples/truth-machine
+endif
+
+ifeq ($(OS),Windows_NT)
+examples\\guess-num\\GuessTheNumber.exe : $(BUILDFLDR)\\$(OBJNAME)
+	mingw32-make -C examples\\guess-num
+else
+examples/guess-num/GuessTheNumber : $(BUILDFLDR)/$(OBJNAME)
+	make -C examples/guess-num
 endif
