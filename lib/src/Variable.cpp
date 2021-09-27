@@ -51,7 +51,7 @@ VariablePointer listHelper(
             }));
         
         default:
-            // Should happen
+            // Shouldn't happen
             return std::make_shared<ListVariable>(std::vector<VariablePointer>({
                 std::make_shared<StringVariable>(
                     "randomly created list lol oops"
@@ -148,14 +148,15 @@ ListVariable::ListVariable(
 
 VariablePointer ListVariable::toString(void) const {
     std::stringstream listStr;
-    listStr << "{";
+    listStr << "{ ";
     for(const auto value : values) {
         listStr <<
             std::dynamic_pointer_cast<StringVariable>(value->toString())->value;
-        if(value != *(values.begin())) {
+        if(value != *(values.end() - 1)) {
             listStr << ", ";
         }
     }
+    listStr << " }";
     return std::make_shared<StringVariable>(listStr.str());
 }
 

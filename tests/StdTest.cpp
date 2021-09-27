@@ -20,6 +20,7 @@ void testEq(void);
 void testGte(void);
 void testLte(void);
 void testNe(void);
+void testSwap(void);
 
 int main(const int argc, const char **args) {
     for(int i = 1; i < argc; i++) {
@@ -47,8 +48,46 @@ int main(const int argc, const char **args) {
             testLte();
         } else if(std::string(args[i]) == "ne") {
             testNe();
+        } else if(std::string(args[i]) == "swap") {
+            testSwap();
         }
     }
+}
+
+void testSwap(void) {
+    std::cout << "Testing std.hpp:swap." << std::endl;
+
+    const std::vector<VariablePointer> nums({
+        std::make_shared<NumberVariable>(2),
+        std::make_shared<NumberVariable>(1),
+        std::make_shared<NumberVariable>(3),
+        std::make_shared<NumberVariable>(4),
+        std::make_shared<NumberVariable>(5)
+    });
+    std::cout << "Created vector of NumberVariables: {";
+    for(const auto &num : nums) {
+        std::cout
+            << " "
+            << std::dynamic_pointer_cast<NumberVariable>(
+                num->toNumber()
+            )->value;
+    }
+    std::cout << " }." << std::endl;
+
+    const auto baseList = std::make_shared<ListVariable>(nums);
+    std::cout
+        << "Created list from vector: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            baseList->toString()
+        )->value << std::endl;
+    
+    const auto swappedList = swap(baseList);
+    std::cout
+        << "Swapped first two numbers: "
+        << std::dynamic_pointer_cast<StringVariable>(
+            swappedList->toString()
+        )->value << std::endl
+        << "Test completed." << std::endl;
 }
 
 void testNe(void) {

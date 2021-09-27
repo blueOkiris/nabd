@@ -115,3 +115,22 @@ inline VariablePointer ne(const VariablePointer &tup) {
     )->value;
     return std::make_shared<NumberVariable>(num1 != num2 ? 1 : -1);
 }
+
+inline VariablePointer swap(const VariablePointer &ls) {
+    const auto data = std::dynamic_pointer_cast<ListVariable>(
+        ls->toList(std::vector<VariableType>({ VariableType::String }))
+    )->values;
+    if(data.size() < 1) {
+        return ls;
+    } else if(data.size() < 2) {
+        return data[0];
+    } else {
+        std::vector<VariablePointer> newData;
+        newData.push_back(data[1]);
+        newData.push_back(data[0]);
+        for(size_t i = 2; i < data.size(); i++) {
+            newData.push_back(data[i]);
+        }
+        return std::make_shared<ListVariable>(newData);
+    }
+}
