@@ -69,6 +69,9 @@ else
 	
 	rm -rf examples/*.o
 	rm -rf examples/*_nabdout
+
+	rm -rf installers/debian/nabc/usr
+	rm -rf installers/debian/nabc.deb
 endif
 
 ifeq ($(OS),Windows_NT)
@@ -156,4 +159,23 @@ examples\\guess-num\\GuessTheNumber.exe : $(BUILDFLDR)\\$(OBJNAME)
 else
 examples/guess-num/GuessTheNumber : $(BUILDFLDR)/$(OBJNAME)
 	make -C examples/guess-num
+endif
+
+ifneq ($(OS),Windows_NT)
+.PHONY : installers/debian/nabc.deb
+installers/debian/nabc.deb : $(BUILDFLDR)/$(OBJNAME)
+	mkdir -p installers/debian/nabc/usr/bin
+	cp $< installers/debian/nabc/usr/bin
+	
+	mkdir -p installers/debian/nabc/usr/include/nabc
+	cp lib/include/std.hpp installers/debian/nabc/usr/include/nabc
+
+ifeq ($(WSL),)
+	dpkg-deb --build installers/debian/nabc
+else
+	cp -r installers/debian/nabc ~
+	dpkg-deb --build ~/nabc
+	rm -rf ~/nabc
+	mv ~/nabc.deb installers/debian
+endif
 endif

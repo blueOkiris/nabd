@@ -1,0 +1,9 @@
+Package: nabc
+Version: 1.0
+Section: devel
+Priority: optional
+Architecture: amd64
+Essential: no
+Installed-Size: 830
+Maintainer: dylantdmt@gmail.com
+Description: Compiler for the Nabd Programming Language
