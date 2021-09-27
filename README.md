@@ -69,9 +69,9 @@ It will be increased overtime
  - `print` - prints the value passed in to stdout and returns the string printed to console
  - `input` - read a string from stdin. Does nothing with parameter
  - `len` - returns the length of what's passed in. For tuples it's always 2, for numbers it's 1, and for lists and strings it's the actual length
- - `swap` - takes the first parameter and interprets it as a number and returns a copy of the second parameter with its first-parameter-th index replaced by the third element. If the index is outside the second parameter, then it simply returns the original parameter. If the type is wrong on the third parameter, then it is converted.
+ - `swap` - takes the first item of the tuple parameter and interprets it as a number and returns a copy of the second item with its first-parameter-th index replaced by the third element. If the index is outside the second parameter, then it simply returns the original parameter.
  - `int` - takes input and attempts to convert it to an integer or defaults to implicit cast if it fails
- - `gt` - takes two inputs and compares and returns 1 if param 1 \> param 2 or -1 otherwise
+ - `gt` - takes two inputs via a tuple, compares them, and returns 1 if param 1 \> param 2 or -1 otherwise
  - `ls` - same as greater but with \<
  - `eq` - same as greater but with =
  - `gte` - same as greater but with \>=
