@@ -799,29 +799,7 @@ parser::ParserResult parser::parseTupDef(
     newInd = lCurl.newInd;
     newLine = lCurl.newLine;
     newCol = lCurl.newCol;
-
-    const auto type1 = parseType(code, newInd, newLine, newCol);
-    if(!type1.success) {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newInd = type1.newInd;
-    newLine = type1.newLine;
-    newCol = type1.newCol;
-
-    const auto typeOp1 = parseTypeOp(code, newInd, newLine, newCol);
-    if(!typeOp1.success) {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newInd = typeOp1.newInd;
-    newLine = typeOp1.newLine;
-    newCol = typeOp1.newCol;
-
+    
     const auto expr1 = parseExpr(code, newInd, newLine, newCol);
     if(!expr1.success) {
         return {
@@ -843,28 +821,6 @@ parser::ParserResult parser::parseTupDef(
     newInd = comma.newInd;
     newLine = comma.newLine;
     newCol = comma.newCol;
-
-    const auto type2 = parseType(code, newInd, newLine, newCol);
-    if(!type2.success) {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newInd = type2.newInd;
-    newLine = type2.newLine;
-    newCol = type2.newCol;
-
-    const auto typeOp2 = parseTypeOp(code, newInd, newLine, newCol);
-    if(!typeOp2.success) {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newInd = typeOp2.newInd;
-    newLine = typeOp2.newLine;
-    newCol = typeOp2.newCol;
 
     const auto expr2 = parseExpr(code, newInd, newLine, newCol);
     if(!expr2.success) {
@@ -890,12 +846,8 @@ parser::ParserResult parser::parseTupDef(
 
     const std::vector<Token> subTokens({
         lCurl.result,
-        type1.result,
-        typeOp1.result,
         expr1.result,
         comma.result,
-        type2.result,
-        typeOp2.result,
         expr2.result,
         rCurl.result
     });
@@ -921,184 +873,6 @@ parser::ParserResult parser::parseLCurl(
     newInd++;
     return {
         { TokenType::LCurl, "{", newLine, newCol - 1, std::vector<Token>() },
-        newLine, newCol, newInd, true
-    };
-}
-
-parser::ParserResult parser::parseType(
-        const std::string &code, const uint64_t index,
-        const uint64_t curLine, const uint64_t curCol) {
-    // 'Str'
-    const auto isStr = parseStrTpName(code, index, curLine, curCol);
-    if(isStr.success) {
-        return {
-            {
-                TokenType::Type, "", 0, 0,
-                std::vector<Token>({ isStr.result })
-            }, isStr.newLine, isStr.newCol, isStr.newInd, true
-        };
-    }
-
-    // 'Num'
-    const auto isNum = parseNumTpName(code, index, curLine, curCol);
-    if(isNum.success) {
-        return {
-            {
-                TokenType::Type, "", 0, 0,
-                std::vector<Token>({ isNum.result }) 
-            }, isNum.newLine, isNum.newCol, isNum.newInd, true
-        };
-    }
-    
-    // [ <type> ]
-    const auto isLs = parseLsTp(code, index, curLine, curCol);
-    if(isLs.success) {
-        return {
-            {
-                TokenType::Type, "", 0, 0,
-                std::vector<Token>({ isLs.result }) 
-            }, isLs.newLine, isLs.newCol, isLs.newInd, true
-        };
-    }
-    
-    // { <type> , <type> }
-    const auto isTup = parseTupTp(code, index, curLine, curCol);
-    if(isTup.success) {
-        return {
-            {
-                TokenType::Type, "", 0, 0,
-                std::vector<Token>({ isTup.result }) 
-            }, isTup.newLine, isTup.newCol, isTup.newInd, true
-        };
-    }
-
-    // Otherwise fail
-    return {
-        { TokenType::Error, "", 0, 0, std::vector<Token>() },
-        curLine, curCol, index, false
-    };
-}
-
-parser::ParserResult parser::parseStrTpName(
-        const std::string &code, const uint64_t index,
-        const uint64_t curLine, const uint64_t curCol) {
-    auto newLine = curLine, newCol = curCol, newInd = index;
-    eatWhiteSpace(code, newInd, newLine, newCol);
-    if(code[newInd] != 'S') {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
-        };
-    }
-    newCol++;
-    newInd++;
-    if(newInd >= code.length() || code[newInd] != 't') {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newCol++;
-    newInd++;
-    if(newInd >= code.length() || code[newInd] != 'r') {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newCol++;
-    newInd++;
-    return {
-        {
-            TokenType::StrTpName, "Str", newLine, newCol - 1,
-            std::vector<Token>()
-        }, newLine, newCol, newInd, true
-    };
-}
-
-parser::ParserResult parser::parseNumTpName(
-        const std::string &code, const uint64_t index,
-        const uint64_t curLine, const uint64_t curCol) {
-    auto newLine = curLine, newCol = curCol, newInd = index;
-    eatWhiteSpace(code, newInd, newLine, newCol);
-    if(code[newInd] != 'N') {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
-        };
-    }
-    newCol++;
-    newInd++;
-    if(newInd >= code.length() || code[newInd] != 'u') {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newCol++;
-    newInd++;
-    if(newInd >= code.length() || code[newInd] != 'm') {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newCol++;
-    newInd++;
-    return {
-        {
-            TokenType::NumTpName, "Num", newLine, newCol - 1,
-            std::vector<Token>()
-        }, newLine, newCol, newInd, true
-    };
-}
-
-parser::ParserResult parser::parseLsTp(
-        const std::string &code, const uint64_t index,
-        const uint64_t curLine, const uint64_t curCol) {
-    auto newLine = curLine, newCol = curCol, newInd = index;
-
-    const auto lBrak = parseLBrak(code, newInd, newLine, newCol);
-    if(!lBrak.success) {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
-        };
-    }
-    newInd = lBrak.newInd;
-    newLine = lBrak.newLine;
-    newCol = lBrak.newCol;
-
-    const auto type = parseType(code, newInd, newLine, newCol);
-    if(!type.success) {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newInd = type.newInd;
-    newLine = type.newLine;
-    newCol = type.newCol;
-
-    const auto rBrak = parseRBrak(code, newInd, newLine, newCol);
-    if(!rBrak.success) {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newInd = rBrak.newInd;
-    newLine = rBrak.newLine;
-    newCol = rBrak.newCol;
-
-    const std::vector<Token> subTokens({
-        lBrak.result,
-        type.result,
-        rBrak.result
-    });
-
-    return {
-        { TokenType::LsTp, "", 0, 0, subTokens },
         newLine, newCol, newInd, true
     };
 }
@@ -1137,107 +911,6 @@ parser::ParserResult parser::parseRBrak(
     newInd++;
     return {
         { TokenType::RBrak, "]", newLine, newCol - 1, std::vector<Token>() },
-        newLine, newCol, newInd, true
-    };
-}
-
-parser::ParserResult parser::parseTupTp(
-        const std::string &code, const uint64_t index,
-        const uint64_t curLine, const uint64_t curCol) {
-    auto newLine = curLine, newCol = curCol, newInd = index;
-
-    const auto lCurl = parseLCurl(code, newInd, newLine, newCol);
-    if(!lCurl.success) {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
-        };
-    }
-    newInd = lCurl.newInd;
-    newLine = lCurl.newLine;
-    newCol = lCurl.newCol;
-
-    const auto type1 = parseType(code, newInd, newLine, newCol);
-    if(!type1.success) {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newInd = type1.newInd;
-    newLine = type1.newLine;
-    newCol = type1.newCol;
-
-    const auto comma = parseComma(code, newInd, newLine, newCol);
-    if(!comma.success) {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newInd = comma.newInd;
-    newLine = comma.newLine;
-    newCol = comma.newCol;
-
-    const auto type2 = parseType(code, newInd, newLine, newCol);
-    if(!type2.success) {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newInd = type2.newInd;
-    newLine = type2.newLine;
-    newCol = type2.newCol;
-
-    const auto rCurl = parseRCurl(code, newInd, newLine, newCol);
-    if(!rCurl.success) {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newInd = rCurl.newInd;
-    newLine = rCurl.newLine;
-    newCol = rCurl.newCol;
-
-    const std::vector<Token> subTokens({
-        lCurl.result,
-        type1.result,
-        comma.result,
-        type2.result,
-        rCurl.result
-    });
-
-    return {
-        { TokenType::TupTp, "", 0, 0, subTokens },
-        newLine, newCol, newInd, true
-    };
-}
-
-parser::ParserResult parser::parseTypeOp(
-        const std::string &code, const uint64_t index,
-        const uint64_t curLine, const uint64_t curCol) {
-    auto newLine = curLine, newCol = curCol, newInd = index;
-    eatWhiteSpace(code, newInd, newLine, newCol);
-    if(code[newInd] != ':') {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            curLine, curCol, index, false
-        };
-    }
-    newCol++;
-    newInd++;
-    if(newInd >= code.length() || code[newInd] != '>') {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newCol++;
-    newInd++;
-    return {
-        { TokenType::TypeOp, ":>", newLine, newCol - 1, std::vector<Token>() },
         newLine, newCol, newInd, true
     };
 }
@@ -1297,30 +970,6 @@ parser::ParserResult parser::parseListDef(
     newLine = lBrak.newLine;
     newCol = lBrak.newCol;
     subTokens.push_back(lBrak.result);
-
-    const auto type = parseType(code, newInd, newLine, newCol);
-    if(!type.success) {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newInd = type.newInd;
-    newLine = type.newLine;
-    newCol = type.newCol;
-    subTokens.push_back(type.result);
-
-    const auto typeOp = parseTypeOp(code, newInd, newLine, newCol);
-    if(!typeOp.success) {
-        return {
-            { TokenType::Error, "", 0, 0, std::vector<Token>() },
-            newLine, newCol, newInd, false
-        };
-    }
-    newInd = typeOp.newInd;
-    newLine = typeOp.newLine;
-    newCol = typeOp.newCol;
-    subTokens.push_back(typeOp.result);
 
     const auto expr = parseExpr(code, newInd, newLine, newCol);
     if(expr.success) {

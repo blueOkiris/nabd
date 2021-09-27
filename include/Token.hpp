@@ -12,9 +12,8 @@ namespace nabd {
     enum class TokenType {
         Program, Include, FuncDef,
         FuncCall, Ternary, ListDef, TupDef, Expr,
-        StrTpName, NumTpName, LsTp, TupTp, Type,
         DolSign, EquSign, Period, RArr, LPar, RPar, QMark, Colon, LBrak, RBrak,
-        LCurl, RCurl, Comma, TypeOp, Exclam,
+        LCurl, RCurl, Comma, Exclam,
         Decimal, Hex, String, Identifier,
         Error
     };

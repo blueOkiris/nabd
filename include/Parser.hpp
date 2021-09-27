@@ -18,19 +18,13 @@
  * <func-call> ::=      <identifier> <lpar> <expr> <rpar>
  * <ternary> ::=        <exclam> <expr> <q-mark> <expr> <colon> <expr>
  * 
- * <list-def> ::=       <lbrak> <type> <type-op> { <exp> { <comma> <expr> } }
+ * <list-def> ::=       <lbrak> { <exp> { <comma> <expr> } }
  *                      <rbrak>
- * <tup-def> ::=        <lcurl> <type> <type-op> <expr> <comma>
- *                      <type> <type-op> <expr> <rcurl>
+ * <tup-def> ::=        <lcurl> <expr> <comma> <expr> <rcurl>
  * 
  * <expr> ::=           <func-call> | <ternary> |
  *                      <string> | <decimal> | <hex> |
  *                      <tup-def> | <list-def> | <identifier>
- * 
- * <type> ::=           <str-tp-name> | <num-tp-name> |
- *                      <ls-tp> | <tup-tp>
- * <ls-tp> ::=          <lbrak> <type> <rbrak>
- * <tup-tp> ::=         <lcurl> <type> <comma> <type> <rcurl>
  * 
  * <dol-sign> ::=       '$'
  * <equ-sign> ::=       '='
@@ -45,11 +39,8 @@
  * <lcurl> ::=          '{'
  * <rcurl> ::=          '}'
  * <comma> ::=          ','
- * <type-op> ::=        ':>'
  * <exclam> ::=         '!'
  * 
- * <str-tp-name> :=     'Str'
- * <num-tp-name> :=     'Num'
  * <decimal> ::=        /0d[0-9]+(\.[0-9]*)*#/
  * <hex> ::=            /0x[0-9a-fA-F]+#/
  * <string> ::=         /'(\\.|[^\\'])*'
@@ -103,26 +94,6 @@ namespace nabd {
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
         );
-        ParserResult parseStrTpName(
-            const std::string &code, const uint64_t index,
-            const uint64_t curLine, const uint64_t curCol
-        );
-        ParserResult parseNumTpName(
-            const std::string &code, const uint64_t index,
-            const uint64_t curLine, const uint64_t curCol
-        );
-        ParserResult parseLsTp(
-            const std::string &code, const uint64_t index,
-            const uint64_t curLine, const uint64_t curCol
-        );
-        ParserResult parseTupTp(
-            const std::string &code, const uint64_t index,
-            const uint64_t curLine, const uint64_t curCol
-        );
-        ParserResult parseType(
-            const std::string &code, const uint64_t index,
-            const uint64_t curLine, const uint64_t curCol
-        );
         ParserResult parseDolSign(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
@@ -172,10 +143,6 @@ namespace nabd {
             const uint64_t curLine, const uint64_t curCol
         );
         ParserResult parseComma(
-            const std::string &code, const uint64_t index,
-            const uint64_t curLine, const uint64_t curCol
-        );
-        ParserResult parseTypeOp(
             const std::string &code, const uint64_t index,
             const uint64_t curLine, const uint64_t curCol
         );

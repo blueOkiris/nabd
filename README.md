@@ -31,10 +31,10 @@ I've placed spaces, but they're not required
 | `! _ ? _ : _` | If an expression converted to a number is > 0, then expression is first, otherwise second
 
 Types:
- - `Str` - a string
- - `Num` - a decimal number
- - `[<subtype>]` - a list of some sub type
- - `{<type 1>, <type 2>}` - a tuple with two sub types
+ - `String` - a string
+ - `Number` - a decimal number
+ - `Tuple` - two objects of different types packed together
+ - `List` - a collection of objects of the same types
 
 Note: all types can be converted to each other and will not error out. For instance, if a string is implicitly cast as a number, or the cast fails to convert it properly to a number, the first character will be converted to its ascii representation
 

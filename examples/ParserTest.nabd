@@ -5,9 +5,7 @@ i1InfI0Stop = loop >
 
 main = args >
     i1InfI0Stop({
-        Num :> parseNum([ Str :> input(0d0#), input(0d0#), input(0d0#),]),
-        {[Str], Num} :> {
-            [Str] :> [ Str :> 'Doesn\'t Matter', 'Cheese\\!' ],
-            Num :> 0x1Fe#
+        parseNum([ input(0d0#), input(0d0#), input(0d0#),]), {
+            [ 'Doesn\'t Matter', 'Cheese\\!' ], 0x1Fe#
         }
     }).

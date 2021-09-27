@@ -52,6 +52,8 @@ ifeq ($(OS),Windows_NT)
 	-cmd /k "rmdir /s /q examples\\guess-num\\GuessTheNumber_nabdout & exit"
 	-cmd /k "del examples\\guess-num\\main.o & exit"
 	-cmd /k "del examples\\guess-num\\GuessTheNumber.exe & exit"
+	
+	-cmd /k "del examples\\ParserTest.o & exit"
 else
 	rm -rf $(BUILDFLDR)
 	rm -rf $(OBJFLDR)
@@ -63,6 +65,8 @@ else
 	rm -rf examples/guess-num/*_nabdout
 	rm -rf examples/guess-num/*.o
 	rm -rf examples/guess-num/GuessTheNumber
+	
+	rm -rf examples/*.o
 endif
 
 ifeq ($(OS),Windows_NT)
